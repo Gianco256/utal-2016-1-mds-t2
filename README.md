@@ -1,5 +1,5 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Utalca.svg/250px-Utalca.svg.png" alt="Universidad de Talca"/><br>
-# [Título del Proyecto]
+# Ajedrez
 Vicente Calderon<br>
 Marco Espinoza<br>
 Gianfranco Vivar<br>
