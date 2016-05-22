@@ -1,0 +1,5 @@
+C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Models\bin\Debug\Ajedrez.Models.dll
+C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Models\bin\Debug\Ajedrez.Models.pdb
+C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Models\obj\Debug\Ajedrez.Models.csprojResolveAssemblyReference.cache
+C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Models\obj\Debug\Ajedrez.Models.dll
+C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Models\obj\Debug\Ajedrez.Models.pdb

@@ -40,8 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Color.cs" />
+    <Compile Include="Coordenada.cs" />
     <Compile Include="Ejemplo.cs" />
+    <Compile Include="Jugada.cs" />
+    <Compile Include="Pieza.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tipo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
