@@ -6,3 +6,6 @@ C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedr
 C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Consola\obj\Debug\Ajedrez.Consola.csprojResolveAssemblyReference.cache
 C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Consola\obj\Debug\Ajedrez.Consola.exe
 C:\Users\vichoste\Documents\Visual Studio 2015\Projects\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Consola\obj\Debug\Ajedrez.Consola.pdb
+C:\Users\Gianco\Source\Repos\NewRepo\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Consola\bin\Debug\Ajedrez.Consola.exe.config
+C:\Users\Gianco\Source\Repos\NewRepo\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Consola\obj\Debug\Ajedrez.Consola.exe
+C:\Users\Gianco\Source\Repos\NewRepo\utal-2016-1-mds-t2\Ajedrez\Ajedrez.Consola\obj\Debug\Ajedrez.Consola.pdb

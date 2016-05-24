@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cuenta.cs" />
+    <Compile Include="Partida.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="Coordenada.cs" />
     <Compile Include="Ejemplo.cs" />
