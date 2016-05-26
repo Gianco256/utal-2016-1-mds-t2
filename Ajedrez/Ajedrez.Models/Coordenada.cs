@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ajedrez.Models {
 	public class Coordenada {
-		private char fila;
-		private byte columna;
-
 		public char Fila {
 			get; set;
 		}
-		public byte Columna {
+		public int Columna {
 			get; set;
 		}
 

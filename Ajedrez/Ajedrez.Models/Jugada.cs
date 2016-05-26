@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Ajedrez.Models {
 	public class Jugada {
-		private Coordenada origen, destino;
-
 		public Coordenada Origen {
 			get; set;
 		}

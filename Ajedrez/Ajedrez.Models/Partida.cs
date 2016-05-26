@@ -6,48 +6,48 @@ using System.Threading.Tasks;
 
 namespace Ajedrez.Models
 {
-    class Partida {
-        private int[,] tablero = new int[8, 8];
-        private Jugador blancas;
-        private Jugador negras;
-        private DateTime inicio;
-        private DateTime ultimaJugada;
-        private bool turno;
-        private List<Jugada> jugadas= new List<Jugada>();
+    public class Partida {
+        private int[,] Tablero = new int[8, 8];
+        private Jugador Blancas;
+        private Jugador Negras;
+        private DateTime Inicio;
+        private DateTime uUltimaJugada;
+        private bool Turno;
+        private List<Jugada> Jugadas= new List<Jugada>();
 
         Partida(){
             throw new NotImplementedException();
         }
 
-        public void iniciar(){
+        public void Iniciar(){
             throw new NotImplementedException();
         }
 
-        public bool jugar(Jugada jugada){
+        public bool Jugar(Jugada jugada){
             throw new NotImplementedException();
         }
 
-        private bool validarJugada(Jugada jugada){
+        private bool ValidarJugada(Jugada jugada){
             throw new NotImplementedException();
         }
 
-        private bool mover(Jugada jugada){
+        private bool Mover(Jugada jugada){
             throw new NotImplementedException();
         }
 
-        private void guardarJugada(Jugada jugada){
+        private void GuardarJugada(Jugada jugada){
             throw new NotImplementedException();
         }
 
-        private bool validarTablero(){
+        private bool ValidarTablero(){
             throw new NotImplementedException();
         }
 
-        private void retroceder(){
+        private void Retroceder(){
             throw new NotImplementedException();
         }
 
-        private void cambiarTurno(){
+        private void CambiarTurno(){
             throw new NotImplementedException();
         }
     }

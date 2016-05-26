@@ -6,50 +6,50 @@ using System.Threading.Tasks;
 
 namespace Ajedrez.Models
 {
-    class Cuenta
+    public class Cuenta
     {
-        private string email;
-        private string password;
-        private DateTime ultimoAcceso;
-        private Jugador jugadorActual;
+        private string Email;
+        private string Password;
+        private DateTime UltimoAcceso;
+        private Jugador JugadorActual;
 
         Cuenta(){
             throw new NotImplementedException();
         }
 
-        public bool registrar(string email, string password){
+        public bool Registrar(string email, string password){
             throw new NotImplementedException();
         }
 
-        public bool seleccionar(string email){
+        public bool Seleccionar(string email){
             throw new NotImplementedException();
         }
 
-        public void iniciarSesion(){
+        public void IniciarSesion(){
             throw new NotImplementedException();
         }
 
-        public void cerrarSesion(){
+        public void CerrarSesion(){
             throw new NotImplementedException();
         }
 
-        public List<Jugador> jugadores(){
+        public List<Jugador> Jugadores(){
             throw new NotImplementedException();
         }
 
-        public void cambiarJugadorActivo(Jugador jugador){
+        public void CambiarJugadorActivo(Jugador jugador){
             throw new NotImplementedException();
         }
 
-        public bool crearJugador(jugador){
+        public bool CrearJugador(Jugador jugador){
             throw new NotImplementedException();
         }
 
-        public bool eliminarJugador(jugador){
+        public bool EliminarJugador(Jugador jugador){
             throw new NotImplementedException();
         }
 
-        public void desactivar(){
+        public void Desactivar(){
             throw new NotImplementedException();
         }
     }
