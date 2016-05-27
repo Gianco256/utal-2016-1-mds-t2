@@ -16,7 +16,7 @@ namespace Ajedrez.Models {
 		public Coordenada() {
 		}
 
-		public int[] traducir() {
+		public int[] Traducir() {
 			throw new NotImplementedException();
 		}
 	}
