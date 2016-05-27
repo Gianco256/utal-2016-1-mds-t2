@@ -15,7 +15,7 @@ namespace Ajedrez.Models
         public DateTime UltimaJugada { get; set; }
         public Color Turno { get; set; }
 
-        Partida(){
+        public Partida(){
             throw new NotImplementedException();
         }
 
