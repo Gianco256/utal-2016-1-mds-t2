@@ -8,12 +8,12 @@ namespace Ajedrez.Models
 {
     public class Cuenta
     {
-        private string Email;
-        private string Password;
-        private DateTime UltimoAcceso;
-        private Jugador JugadorActual;
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public DateTime UltimoAcceso { get; set; }
+        public Jugador JugadorActual { get; set; }
 
-        Cuenta(){
+        public Cuenta(){
             throw new NotImplementedException();
         }
 
