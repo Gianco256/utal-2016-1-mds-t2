@@ -11,6 +11,11 @@ namespace Ajedrez.Models {
         public Sexo Sexo { get; set;}
         public DateTime FechaNacimiento { get; set; }
 
+        public Jugador()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Partida> Partidas()
         {
             throw new NotImplementedException();
