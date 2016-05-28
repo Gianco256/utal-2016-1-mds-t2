@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace Ajedrez.Models
 {
     public class Partida {
-        private int[,] Tablero;
+        private Pieza[,] Tablero;
         private List<Jugada> Jugadas;
-        public Jugador Blancas { get; set; }
-        public Jugador Negras { get; set; }
-        public DateTime Inicio { get; set; }
-        public DateTime UltimaJugada { get; set; }
-        public Color Turno { get; set; }
+        public Jugador Blancas{ get; set; }
+        public Jugador Negras{ get; set; }
+        public DateTime Inicio{ get; set; }
+        public DateTime UltimaJugada{ get; set; }
+        public Color Turno{ get; set; }
 
         public Partida(){
             throw new NotImplementedException();
@@ -30,7 +30,7 @@ namespace Ajedrez.Models
         private bool ValidarJugada(Jugada jugada){
             throw new NotImplementedException();
         }
-
+        
         private bool Mover(Jugada jugada){
             throw new NotImplementedException();
         }
