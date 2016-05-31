@@ -10,25 +10,26 @@ namespace Ajedrez.Models {
         public String Nick { get; set; }
         public Sexo Sexo { get; set;}
         public DateTime FechaNacimiento { get; set; }
+        private List<Partida> partidas;
 
         public Jugador()
         {
-            throw new NotImplementedException();
+            partidas = new List<Partida>();
         }
 
         public List<Partida> Partidas()
         {
-            throw new NotImplementedException();
+            return partidas;
         }
 
         public void Desafiar(Partida partida)
         {
-            throw new NotImplementedException();
+            partidas.Add(partida);
         }
 
         public bool Eliminar(Partida partida)
         {
-            throw new NotImplementedException();
+            return partidas.Remove(partida);
         }
 	}
 }
