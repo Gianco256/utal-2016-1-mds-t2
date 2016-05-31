@@ -13,7 +13,6 @@ namespace Ajedrez.Models {
 
         public Jugador()
         {
-            throw new NotImplementedException();
         }
 
         public List<Partida> Partidas()

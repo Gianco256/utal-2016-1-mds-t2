@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ajedrez.Consola
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            var persona = new Models.Persona();
-            Console.WriteLine(persona.Edad);
-        }
-    }
+using Ajedrez.Models;
+
+namespace Ajedrez.Consola {
+	class Program {
+		static void Main(string[] args) {
+			Cuenta cuenta = new Cuenta() { Email = "abc", Password = "123" };
+			cuenta.Registrar("abc", "123");
+			Console.ReadLine();
+		}
+	}
 }

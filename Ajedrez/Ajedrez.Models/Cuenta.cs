@@ -4,53 +4,123 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ajedrez.Models
-{
-    public class Cuenta
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public DateTime UltimoAcceso { get; set; }
-        public Jugador JugadorActual { get; set; }
+using System.Xml;
+using System.Xml.Linq;
 
-        public Cuenta(){
-            throw new NotImplementedException();
-        }
+namespace Ajedrez.Models {
+	public class Cuenta {
+		public string Email {
+			get; set;
+		}
+		public string Password {
+			get; set;
+		}
+		public DateTime UltimoAcceso {
+			get; set;
+		}
+		public Jugador JugadorActual {
+			get; set;
+		}
 
-        public bool Registrar(string email, string password){
-            throw new NotImplementedException();
-        }
+		public Cuenta() {
+		}
 
-        public bool Seleccionar(string email){
-            throw new NotImplementedException();
-        }
+		public Cuenta(string email, string password, DateTime ultimoAcceso, Jugador jugadorActual) {
+			this.Email = email;
+			this.Password = password;
+			this.UltimoAcceso = ultimoAcceso;
+			this.JugadorActual = jugadorActual;
+		}
 
-        public void IniciarSesion(){
-            throw new NotImplementedException();
-        }
+		public bool Registrar(string email, string password) {
+			System.IO.Directory.CreateDirectory(@"C:\utal-2016-1-mds-t2");
+			XDocument xDoc;
+			if (!System.IO.File.Exists(@"C:\utal-2016-1-mds-t2\cuentas.xml")) {
+				xDoc = new XDocument(
+				new XDeclaration("1.0", "utf-8", "yes"),
+				new XComment("Lista de cuentas"),
+				new XElement("Cuentas")
+				);
+			} else {
+				xDoc = XDocument.Load(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+			}
+			if (!this.Seleccionar(email)) {
+				xDoc.Element("Cuentas").Add(new XElement("Cuenta",
+													new XElement("Email", email),
+													new XElement("Password", password),
+													new XElement("UltimoAcceso", DateTime.Now),
+													new XElement("JugadorActual")
+							));
+				xDoc.Save(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+				return true;
+			}
+			return false;
+		}
 
-        public void CerrarSesion(){
-            throw new NotImplementedException();
-        }
+		public bool Seleccionar(string email) {
+			try {
+				XmlDocument xDoc = new XmlDocument();
+				xDoc.Load(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+				var xCuenta = xDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + email + "']");
+				if (xCuenta == null) {
+					return false;
+				} else {
+					return true;
+				}
+			} catch (Exception ex) {
+				return false;
+			}
+		}
 
-        public List<Jugador> Jugadores(){
-            throw new NotImplementedException();
-        }
+		public bool IniciarSesion() {
+			XmlDocument xDoc = new XmlDocument();
+			xDoc.Load(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+			var xCuenta = xDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + this.Email + "' and Password = '" + this.Password + "']");
+			if (xCuenta == null) {
+				return false;
+			} else {
+				this.UltimoAcceso = DateTime.Now;
+				xDoc.Save(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+				return true;
+			}
+		}
 
-        public void CambiarJugadorActivo(Jugador jugador){
-            throw new NotImplementedException();
-        }
+		public void CerrarSesion() {
+			throw new NotImplementedException();
+		}
 
-        public bool CrearJugador(Jugador jugador){
-            throw new NotImplementedException();
-        }
+		public List<Jugador> Jugadores() {
+			throw new NotImplementedException();
+		}
 
-        public bool EliminarJugador(Jugador jugador){
-            throw new NotImplementedException();
-        }
+		public void CambiarJugadorActivo(Jugador jugador) {
+			throw new NotImplementedException();
+		}
 
-        public void Desactivar(){
-            throw new NotImplementedException();
-        }
-    }
+		public bool CrearJugador(Jugador jugador) {
+			throw new NotImplementedException();
+		}
+
+		public bool EliminarJugador(Jugador jugador) {
+			throw new NotImplementedException();
+		}
+
+		public bool Desactivar() {
+			try {
+				XmlDocument xDoc = new XmlDocument();
+				xDoc.Load(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+
+				var xCuenta = xDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + this.Email + "' and Password = '" + this.Password + "']");
+				if (xCuenta == null) {
+					return false;
+				} else {
+					xCuenta.ParentNode.RemoveChild(xCuenta);
+					xDoc.Save(@"C:\utal-2016-1-mds-t2\cuentas.xml");
+				}
+				return true;
+			} catch (Exception ex) {
+				return false;
+			}
+		}
+	}
 }
