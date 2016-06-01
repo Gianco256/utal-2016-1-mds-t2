@@ -19,17 +19,17 @@ namespace Ajedrez.Models {
 
         public List<Partida> Partidas()
         {
-            return partidas;
+            return this.partidas;
         }
 
         public void Desafiar(Partida partida)
         {
-            partidas.Add(partida);
+            this.partidas.Add(partida);
         }
 
         public bool Eliminar(Partida partida)
         {
-            return partidas.Remove(partida);
+            return this.partidas.Remove(partida);
         }
 	}
 }
