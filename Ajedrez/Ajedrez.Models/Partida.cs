@@ -85,7 +85,7 @@ namespace Ajedrez.Models {
 			if (this.Turno == Color.BLANCO) {
 				this.Turno = Color.NEGRO;
 			} else {
-				this.Turno = Color.BLANCO;
+				this.Turno = Color.NEGRO;
 			}
 		}
 	}
