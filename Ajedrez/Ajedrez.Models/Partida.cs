@@ -122,7 +122,7 @@ namespace Ajedrez.Models {
 			if (this.Turno == Color.BLANCO) {
 				this.Turno = Color.NEGRO;
 			} else {
-				this.Turno = Color.NEGRO;
+				this.Turno = Color.BLANCO;
 			}
 		}
 	}
