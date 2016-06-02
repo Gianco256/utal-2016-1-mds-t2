@@ -110,11 +110,26 @@ namespace Ajedrez.Models {
 			xDoc.Save(@"C:\utal-2016-1-mds-t2\jugadas[ID].xml");
 		}
 
-		private bool ValidarTablero() {
-			throw new NotImplementedException();
-		}
+        private bool ValidarTablero()
+        {
+            for (int x = 0; x < Tablero.GetLength(0); x++)
+            {
+                for (int y = 0; y < Tablero.GetLength(1); y++)
+                {
+                    if (Tablero[x, y].Tipo.Equals(Tipo.REY))
+                    {
+                        /*
+                            Verificar si el rey puede moverse a su alrededor(JAQUE)
+                            Si puede moverse retornamos TRUE, si no, el ciclo continua hasta terminar 
+                            y arrojar FALSE.
+                        */
+                    }
+                }
+            }
+            return false;
+        }
 
-		private void Retroceder() {
+        private void Retroceder() {
 			throw new NotImplementedException();
 		}
 
