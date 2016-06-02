@@ -81,7 +81,11 @@ namespace Ajedrez.Models {
 		}
 
 		private bool ValidarJugada(Jugada jugada) {
-			throw new NotImplementedException();
+            var cord = jugada.Origen.Traducir();
+            if (this.Tablero[cord[0], cord[1]].Color != this.Turno) return false;
+            cord = jugada.Destino.Traducir();
+            if(this.Tablero[cord[0], cord[1]].Color==this.Turno) return false;
+            return true;
 		}
 
 		private void Mover(Jugada jugada) {
