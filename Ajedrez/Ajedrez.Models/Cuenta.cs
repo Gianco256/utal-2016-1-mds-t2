@@ -98,8 +98,28 @@ namespace Ajedrez.Models {
 		}
 
 		public bool CrearJugador(Jugador jugador) {
-			throw new NotImplementedException();
-		}
+            XDocument xDoc;
+            if (!System.IO.File.Exists(@"C:\utal-2016-1-mds-t2\jugadores.xml"))
+            {
+                xDoc = new XDocument(
+                new XDeclaration("1.0", "utf-8", "yes"),
+                new XComment("Lista de jugadores"),
+                new XElement("Jugadores")
+                );
+            }else xDoc = XDocument.Load(@"C:\utal-2016-1-mds-t2\jugadores.xml");
+
+            if(xDoc.Element("/Jugadores/Jugador['Id=" + jugador.Id + "]")==null){
+                xDoc.Element("Jugadores").Add(new XElement("Jugador",
+                                                    new XElement("Id", jugador.Id),
+                                                    new XElement("Nick", jugador.Nick),
+                                                    new XElement("Sexo", jugador.Sexo),
+                                                    new XElement("FechaNacimiento", jugador.FechaNacimiento)
+                            ));
+                xDoc.Save(@"C:\utal-2016-1-mds-t2\jugadores.xml");
+                return true;
+            }
+            return false;
+        }
 
 		public bool EliminarJugador(Jugador jugador) {
 			throw new NotImplementedException();
