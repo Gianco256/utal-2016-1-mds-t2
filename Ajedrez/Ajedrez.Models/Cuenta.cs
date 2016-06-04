@@ -110,6 +110,7 @@ namespace Ajedrez.Models {
 
             if(xDoc.Element("/Jugadores/Jugador['Id=" + jugador.Id + "]")==null){
                 xDoc.Element("Jugadores").Add(new XElement("Jugador",
+                                                    new XElement("Id-Cuenta", this.Email),
                                                     new XElement("Id", jugador.Id),
                                                     new XElement("Nick", jugador.Nick),
                                                     new XElement("Sexo", jugador.Sexo),
