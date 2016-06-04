@@ -94,8 +94,15 @@ namespace Ajedrez.Models {
 		}
 
 		public void CambiarJugadorActivo(Jugador jugador) {
-			throw new NotImplementedException();
-		}
+            XDocument xDoc;
+            if (!System.IO.File.Exists(@"C:\utal-2016-1-mds-t2\jugadores.xml")) return;
+            else xDoc = XDocument.Load(@"C:\utal-2016-1-mds-t2\jugadores.xml");
+
+            if (xDoc.Element("/Jugadores/Jugador['Id=" + jugador.Id + " Id-Cuenta=" + this.Email + "]") != null)
+            {
+                this.JugadorActual = jugador;
+            }
+        }
 
 		public bool CrearJugador(Jugador jugador) {
             XDocument xDoc;
