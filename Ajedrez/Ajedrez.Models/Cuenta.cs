@@ -137,7 +137,7 @@ namespace Ajedrez.Models {
                                                     new XElement("Id", jugador.Id),
                                                     new XElement("Nick", jugador.Nick),
                                                     new XElement("Sexo", jugador.Sexo),
-                                                    new XElement("FechaNacimiento", jugador.FechaNacimiento)
+                                                    new XElement("FechaNacimiento", jugador.FechaNacimiento.Ticks)
                             ));
                 xDoc.Save(@"C:\utal-2016-1-mds-t2\jugadores.xml");
                 return true;
