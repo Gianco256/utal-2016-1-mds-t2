@@ -90,8 +90,24 @@ namespace Ajedrez.Models {
 		}
 
 		public List<Jugador> Jugadores() {
-			throw new NotImplementedException();
-		}
+            XDocument xDoc;
+            List<Jugador> acum = new List<Jugador>();
+            if (!System.IO.File.Exists(@"C:\utal-2016-1-mds-t2\jugadores.xml")) return acum;
+            else xDoc = XDocument.Load(@"C:\utal-2016-1-mds-t2\jugadores.xml");
+            
+
+            List<XElement> entrada= (List<XElement>)xDoc.Elements("/Jugadores/Jugador['Id-Cuenta=" + Email + "]");
+
+            foreach(XElement th in entrada){
+                acum.Add(new Jugador() {
+                    Id = Int64.Parse(th.Attribute("['Id']").Value),
+                    Nick = th.Attribute("['Nick']").Value,
+                    Sexo = (Sexo)Int32.Parse(th.Attribute("['Sexo']").Value),
+                    FechaNacimiento = new DateTime(Int64.Parse(th.Attribute("['FechaNacimiento']").Value)),
+                });
+            }
+            return acum;
+        }
 
 		public void CambiarJugadorActivo(Jugador jugador) {
             XDocument xDoc;
