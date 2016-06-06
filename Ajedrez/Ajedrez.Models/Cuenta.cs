@@ -114,9 +114,8 @@ namespace Ajedrez.Models {
             if (!System.IO.File.Exists(@"C:\utal-2016-1-mds-t2\jugadores.xml")) return;
             else xDoc = XDocument.Load(@"C:\utal-2016-1-mds-t2\jugadores.xml");
 
-            if (xDoc.Element("/Jugadores/Jugador['Id=" + jugador.Id + " Id-Cuenta=" + this.Email + "]") != null)
-            {
-                this.JugadorActual = jugador;
+            if (xDoc.Element("/Jugadores/Jugador['Id=" + jugador.Id + " Id-Cuenta=" + this.Email + "]") != null){
+                this.JugadorActual= jugador;
             }
         }
 
@@ -145,9 +144,19 @@ namespace Ajedrez.Models {
             return false;
         }
 
-		public bool EliminarJugador(Jugador jugador) {
-			throw new NotImplementedException();
-		}
+		public bool EliminarJugador(Jugador jugador){
+            if (!System.IO.File.Exists(@"C:\utal-2016-1-mds-t2\jugadores.xml") || jugador==null) return false;
+
+            XDocument xDoc = XDocument.Load(@"C:\utal-2016-1-mds-t2\jugadores.xml");
+            var elemjugador = xDoc.Element("/Jugadores/Jugador['Id=" + jugador.Id + " Id-Cuenta=" + this.Email + "]");
+            if (elemjugador != null)
+            {
+                elemjugador.Remove();
+                xDoc.Save(@"C:\utal-2016-1-mds-t2\jugadores.xml");
+                return true;
+            }
+            return false;
+        }
 
 		public bool Desactivar() {
 			try {
