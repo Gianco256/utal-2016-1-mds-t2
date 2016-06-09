@@ -69,15 +69,18 @@ namespace Ajedrez.Models {
 		}
 
 		public bool Jugar(Jugada jugada) {
-			if (this.ValidarJugada(jugada)) {
-				this.Mover(jugada);
-				this.GuardarJugada(jugada);
-				this.ValidarTablero();
-				return true;
-			}
-			this.Retroceder();
-			this.ValidarTablero(); // No sé si será necesario revalidar el tablero en caso de un movimiento no válido
-			return false;
+            if ( !(this.ValidarJugada(jugada)) ) return false;
+            var xy= jugada.Destino.Traducir();
+            var tmp= this.Tablero[xy[0], xy[1]];
+
+            this.Mover(jugada);
+			this.GuardarJugada(jugada);
+			if( !(this.ValidarTablero()) ){
+                this.Retroceder();
+                this.Tablero[xy[0], xy[1]] = tmp;
+                return false;
+            }
+			return true;
 		}
 
 		private bool ValidarJugada(Jugada jugada) {
