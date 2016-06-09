@@ -11,7 +11,12 @@ namespace Ajedrez.Consola {
 		static void Main(string[] args) {
 			Cuenta cuenta = new Cuenta() { Email = "abc", Password = "123" };
 			cuenta.Registrar("abc", "123");
-			Console.ReadLine();
-		}
+
+            cuenta.CrearJugador(new Jugador() { Id = 1, FechaNacimiento = DateTime.Now, Nick = "Polux", Sexo = Sexo.MASCULINO });
+            var jugadores = cuenta.Jugadores();
+
+            cuenta.CambiarJugadorActivo(jugadores[0]);
+            cuenta.EliminarJugador(jugadores[0]);
+        }
 	}
 }
