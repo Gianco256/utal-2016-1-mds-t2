@@ -84,53 +84,12 @@ namespace Ajedrez.Models {
 		}
 
 		private bool ValidarJugada(Jugada jugada) {
-            //valida que el espacio de llegada este disponible
-            var cordLlegada = jugada.Destino.Traducir();
-
-            //valida que la posicion este ocupada por una pieza del turno actual
-            var cordInicio = jugada.Origen.Traducir();
-            var piezaEnMano = this.Tablero[cordInicio[0], cordInicio[1]];
-            if (piezaEnMano == null || piezaEnMano.Color==this.Turno) return false;
-            
-            //Valida que el movimiento pueda ser efectuado por la pieza
-            switch (piezaEnMano.Tipo){
-                case Tipo.PEON:
-                    return false;
-
-                case Tipo.TORRE:
-                    if (cordInicio[0] == cordLlegada[0]){
-                        int mov = cordInicio[1]<cordLlegada[1]? 1 : -1;
-                        for (int y= cordInicio[1]+mov;
-                                y!=cordLlegada[1];
-                                y+=mov)
-                        {
-                            if (this.Tablero[cordInicio[0], y] != null) return false;
-                        }
-                        return true;
-                    }
-                    else if (cordInicio[1] == cordLlegada[1]){
-                        int mov = cordInicio[0]<cordLlegada[0] ? 1 : -1;
-                        for (int x = cordInicio[0] + mov;
-                                x != cordLlegada[0];
-                                x += mov)
-                        {
-                            if (this.Tablero[x, cordInicio[1]] != null) return false;
-                        }
-                        return true;
-                    }
-                    return false;
-                case Tipo.CABALLO:
-                    return false;
-                case Tipo.ALFIL:
-                    return false;
-                case Tipo.REY:
-                    return false;
-                case Tipo.REINA:
-                    return false;
-                default:
-                    return false;
-            }
-        }
+            var cord = jugada.Origen.Traducir();
+            if (this.Tablero[cord[0], cord[1]].Color != this.Turno) return false;
+            cord = jugada.Destino.Traducir();
+            if(this.Tablero[cord[0], cord[1]].Color==this.Turno) return false;
+            return true;
+		}
 
 		private void Mover(Jugada jugada) {
 			Pieza temp = this.Tablero[jugada.Origen.Traducir()[0], jugada.Origen.Traducir()[1]];
