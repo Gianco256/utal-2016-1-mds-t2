@@ -6,30 +6,34 @@ using System.Threading.Tasks;
 
 namespace Ajedrez.Models {
 	public class Jugador {
-        public long Id { get; set; }
-        public String Nick { get; set; }
-        public Sexo Sexo { get; set;}
-        public DateTime FechaNacimiento { get; set; }
-        private List<Partida> partidas;
+		public long Id {
+			get; set;
+		}
+		public String Nick {
+			get; set;
+		}
+		public Sexo Sexo {
+			get; set;
+		}
+		public DateTime FechaNacimiento {
+			get; set;
+		}
+		private List<Partida> partidas;
 
-        public Jugador()
-        {
+		public Jugador() {
 			this.partidas = new List<Partida>();
-        }
+		}
 
-        public List<Partida> Partidas()
-        {
-            return this.partidas;
-        }
+		public List<Partida> Partidas() {
+			return this.partidas;
+		}
 
-        public void Desafiar(Partida partida)
-        {
-            this.partidas.Add(partida);
-        }
+		public void Desafiar(Partida partida) {
+			this.partidas.Add(partida);
+		}
 
-        public bool Eliminar(Partida partida)
-        {
-            return this.partidas.Remove(partida);
-        }
+		public bool Eliminar(Partida partida) {
+			return this.partidas.Remove(partida);
+		}
 	}
 }

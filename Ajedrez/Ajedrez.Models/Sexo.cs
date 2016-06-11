@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Ajedrez.Models {
 	public enum Sexo {
-		MASCULINO,
-		FEMENINO
+		MASCULINO, FEMENINO
 	}
 }
