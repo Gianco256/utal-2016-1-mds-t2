@@ -11,6 +11,9 @@ namespace Ajedrez.Models {
 	public class Partida {
 		private Pieza[,] Tablero;
 		private List<Jugada> Jugadas;
+        public long Id{
+            get; set;
+        }
 		public Jugador Blancas {
 			get; set;
 		}
