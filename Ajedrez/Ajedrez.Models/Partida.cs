@@ -191,7 +191,7 @@ namespace Ajedrez.Models {
 		<Fila>" + jugada.Destino.Traducir()[0] + @"</Fila>
 		<Columna>" + jugada.Destino.Traducir()[1] + @"</Columna>
 	</Destino>
-</Jugada>";
+  </Jugada>";
 			xmlDoc.FirstChild.AppendChild(xmldf);
 			xmlDoc.Save(RutaXMLPartida);
 
