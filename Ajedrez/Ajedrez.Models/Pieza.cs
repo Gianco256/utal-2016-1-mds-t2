@@ -13,7 +13,9 @@ namespace Ajedrez.Models {
 			get; set;
 		}
 
-		public Pieza() {
-		}
+		public Pieza(Color color, Tipo tipo) {
+            this.Color = color;
+            this.Tipo = tipo;
+        }
 	}
 }

@@ -8,71 +8,62 @@ using System.Xml;
 using System.Xml.Linq;
 
 namespace Ajedrez.Models {
-	public class Partida {
-		private const string RutaXML = @"C:\Ajedrez";
-		private string RutaXMLPartida;
+    public class Partida {
+        private const string RutaXML = @"C:\Ajedrez";
+        private string RutaXMLPartida;
 
-		private Pieza[,] Tablero;
-		private List<Jugada> Jugadas;
-		public long Id {
-			get; set;
-		}
-		public Jugador Blancas {
-			get; set;
-		}
-		public Jugador Negras {
-			get; set;
-		}
-		public DateTime Inicio {
-			get; set;
-		}
-		public DateTime UltimaJugada {
-			get; set;
-		}
-		public Color Turno {
-			get; set;
-		}
+        private Pieza[,] Tablero;
+        private List<Jugada> Jugadas;
+        public long Id {
+            get; set;
+        }
+        public Jugador Blancas {
+            get; set;
+        }
+        public Jugador Negras {
+            get; set;
+        }
+        public DateTime Inicio {
+            get; set;
+        }
+        public DateTime UltimaJugada {
+            get; set;
+        }
+        public Color Turno {
+            get; set;
+        }
 
-		public Partida() {
-			this.Id = (new Random()).Next();
-			this.RutaXMLPartida = RutaXML + @"\Partida" + Convert.ToString(this.Id);
-		}
+        public Partida() {
+            this.Id = (new Random()).Next();
+            this.RutaXMLPartida = RutaXML + @"\Partida" + Convert.ToString(this.Id);
+        }
 
-		public void Iniciar() {
-			Inicio = new DateTime();
-			for (int y = 0; y < 2; y++) {
-				for (int x = 0; x < 4; x++) {
-					switch (x) {
-						case 0:
-							Tablero[x, y] = new Pieza();
-							Tablero[x, y].Tipo = Tipo.TORRE;
-							Tablero[4 + x, y] = new Pieza();
-							Tablero[4 + x, y].Tipo = Tipo.TORRE;
-							break;
-						case 1:
-							Tablero[x, y] = new Pieza();
-							Tablero[x, y].Tipo = Tipo.CABALLO;
-							Tablero[4 + x, y] = new Pieza();
-							Tablero[4 + x, y].Tipo = Tipo.CABALLO;
-							break;
-						case 2:
-							Tablero[x, y] = new Pieza();
-							Tablero[x, y].Tipo = Tipo.ALFIL;
-							Tablero[4 + x, y] = new Pieza();
-							Tablero[4 + x, y].Tipo = Tipo.ALFIL;
-							break;
-						case 3:
-							Tablero[x, y] = new Pieza();
-							Tablero[x, y].Tipo = Tipo.REY;
-							Tablero[4 + x, y] = new Pieza();
-							Tablero[4 + x, y].Tipo = Tipo.REINA;
-							break;
-					}
-				}
-			}
-		}
+        public void Iniciar() {
+            Inicio = new DateTime();
+            Tablero = new Pieza[8, 8];
+            /* Jugador blanco */
+            Tablero[0, 0] = new Pieza(Color.BLANCO, Tipo.TORRE);
+            Tablero[1, 0] = new Pieza(Color.BLANCO, Tipo.CABALLO);
+            Tablero[2, 0] = new Pieza(Color.BLANCO, Tipo.ALFIL);
+            Tablero[3, 0] = new Pieza(Color.BLANCO, Tipo.REY);
+            Tablero[4, 0] = new Pieza(Color.BLANCO, Tipo.REINA);
+            Tablero[5, 0] = new Pieza(Color.BLANCO, Tipo.ALFIL);
+            Tablero[6, 0] = new Pieza(Color.BLANCO, Tipo.CABALLO);
+            Tablero[7, 0] = new Pieza(Color.BLANCO, Tipo.TORRE);
+            for (int i = 0; i < 8; i++) { Tablero[i, 1] = new Pieza(Color.BLANCO, Tipo.PEON); }
+            /* Jugador negro */
+            Tablero[0, 7] = new Pieza(Color.NEGRO, Tipo.TORRE);
+            Tablero[1, 7] = new Pieza(Color.NEGRO, Tipo.CABALLO);
+            Tablero[2, 7] = new Pieza(Color.NEGRO, Tipo.ALFIL);
+            Tablero[3, 7] = new Pieza(Color.NEGRO, Tipo.REY);
+            Tablero[4, 7] = new Pieza(Color.NEGRO, Tipo.REINA);
+            Tablero[5, 7] = new Pieza(Color.NEGRO, Tipo.ALFIL);
+            Tablero[6, 7] = new Pieza(Color.NEGRO, Tipo.CABALLO);
+            Tablero[7, 7] = new Pieza(Color.NEGRO, Tipo.TORRE);
+            for (int i = 0; i < 8; i++) { Tablero[i, 6] = new Pieza(Color.NEGRO, Tipo.PEON); }
+        }
 
-		public bool Jugar(Jugada jugada) {
+        public bool Jugar(Jugada jugada) {
 			if (!(this.ValidarJugada(jugada)))
 				return false;
 			var xy = jugada.Destino.Traducir();
