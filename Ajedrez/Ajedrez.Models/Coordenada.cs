@@ -17,7 +17,38 @@ namespace Ajedrez.Models {
 		}
 
 		public int[] Traducir() {
-			throw new NotImplementedException();
+			int[] translate = new int[2];
+			switch (this.Fila) {
+				case 'A':
+					translate[0] = 0;
+					break;
+				case 'B':
+					translate[0] = 1;
+					break;
+				case 'C':
+					translate[0] = 2;
+					break;
+				case 'D':
+					translate[0] = 3;
+					break;
+				case 'E':
+					translate[0] = 4;
+					break;
+				case 'F':
+					translate[0] = 5;
+					break;
+				case 'G':
+					translate[0] = 6;
+					break;
+				case 'H':
+					translate[0] = 7;
+					break;
+				default:
+					translate[0] = -1;
+					break;
+			}
+			translate[1] = this.Columna;
+			return translate;
 		}
 	}
 }
