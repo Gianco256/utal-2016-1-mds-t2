@@ -10,8 +10,8 @@ using System.Xml.Linq;
 namespace Ajedrez.Models {
 	public class Cuenta {
 		private const string RutaXML = @"C:\Ajedrez";
-		private const string RutaXMLCuentas = @"C:\Ajedrez\Cuentas.xml";
-		private const string RutaXMLJugadores = @"C:\Ajedrez\Jugadores.xml";
+		private const string RutaXMLCuentas = Cuenta.RutaXML + @"\Cuentas.xml";
+		private const string RutaXMLJugadores = Cuenta.RutaXML + @"\Jugadores.xml";
 
 		public string Email {
 			get; set;
@@ -46,12 +46,13 @@ namespace Ajedrez.Models {
 			}
 			if (!this.Seleccionar(email)) {
 				var xmldf = xmlDoc.CreateDocumentFragment();
-				xmldf.InnerXml = @"<Cuenta>
-                        <Email>" + email + @"</Email>
-                        <Password>" + password + @"</Password>
-                        <UltimoAcceso>" + DateTime.Now.Ticks + @"</UltimoAcceso>
-                        <JugadorActual></JugadorActual>
-                    </Cuenta>";
+				xmldf.InnerXml =
+@"<Cuenta>
+	<Email>" + email + @"</Email>
+	<Password>" + password + @"</Password>
+	<UltimoAcceso>" + DateTime.Now.Ticks + @"</UltimoAcceso>
+	<JugadorActual></JugadorActual>
+</Cuenta>";
 				xmlDoc.FirstChild.AppendChild(xmldf);
 				xmlDoc.Save(RutaXMLCuentas);
 				return true;
