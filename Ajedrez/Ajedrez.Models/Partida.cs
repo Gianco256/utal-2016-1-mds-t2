@@ -130,9 +130,9 @@ namespace Ajedrez.Models {
 					break;
 				case Tipo.CABALLO:
 					// el unico que se comprueba diferente
-					if (Math.Abs(dY) == 1 && Math.Abs(dX) == 3)
+					if (Math.Abs(dY) == 1 && Math.Abs(dX) == 2)
 						return true;
-					if (Math.Abs(dX) == 1 && Math.Abs(dY) == 3)
+					if (Math.Abs(dX) == 1 && Math.Abs(dY) == 2)
 						return true;
 					return false;
 				case Tipo.ALFIL:
