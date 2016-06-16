@@ -8,9 +8,9 @@ using System.Xml;
 
 namespace Ajedrez.Models {
 	public class Jugador {
-        private string RutaXMLJugadores = ConfigurationManager.AppSettings["RutaXMLJugadores"];
+		private string RutaXMLJugadores = ConfigurationManager.AppSettings["RutaXMLJugadores"];
 
-        public long Id {
+		public long Id {
 			get; set;
 		}
 		public String Nick {
@@ -29,28 +29,27 @@ namespace Ajedrez.Models {
 		}
 
 		public List<Partida> Partidas() {
-            XmlDocument xmlDoc = new XmlDocument();
-            if (!System.IO.File.Exists(RutaXMLJugadores))
-                return this.partidas;
-            else
-                xmlDoc.Load(RutaXMLJugadores);
+			XmlDocument xmlDoc = new XmlDocument();
+			if (!System.IO.File.Exists(RutaXMLJugadores))
+				return this.partidas;
+			else
+				xmlDoc.Load(RutaXMLJugadores);
 
-            var xPartidas = xmlDoc.SelectNodes("//Jugadores/Jugador[Id='" + this.Id + "']/Partidas/Partida");
+			var xPartidas = xmlDoc.SelectNodes("//Jugadores/Jugador[Id='" + this.Id + "']/Partidas/Partida");
 
-            foreach (XmlNode xPartida in xPartidas)
-            {
-                Partida p = new Partida();
-                //p.Seleccionar(Int64.Parse(th["Id"].InnerText));
-                this.partidas.Add(p);
-            }
-            return this.partidas;
+			foreach (XmlNode xPartida in xPartidas) {
+				Partida p = new Partida();
+				//p.Seleccionar(Int64.Parse(th["Id"].InnerText));
+				this.partidas.Add(p);
+			}
+			return this.partidas;
 		}
 
 		public bool Desafiar(Partida partida) {
 			this.partidas.Add(partida);
 
-            ////Las partidas deberian guardarse de la siguiente manera en el documento XML que guarda los jugadores.
-            /*
+			////Las partidas deberian guardarse de la siguiente manera en el documento XML que guarda los jugadores.
+			/*
             
             <Jugador>
 		        <Email>abc</Email>
@@ -87,10 +86,10 @@ namespace Ajedrez.Models {
 	        </Jugador>
             
             */
-            return true;
-        }
+			return true;
+		}
 
-        public bool Eliminar(Partida partida) {
+		public bool Eliminar(Partida partida) {
 			return this.partidas.Remove(partida);
 		}
 	}

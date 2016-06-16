@@ -10,8 +10,8 @@ using System.Xml.Linq;
 
 namespace Ajedrez.Models {
 	public class Cuenta {
-        private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
-        private string RutaXMLCuentas = ConfigurationManager.AppSettings["RutaXMLCuentas"];
+		private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
+		private string RutaXMLCuentas = ConfigurationManager.AppSettings["RutaXMLCuentas"];
 		private string RutaXMLJugadores = ConfigurationManager.AppSettings["RutaXMLJugadores"];
 
 		public string Email {
@@ -65,8 +65,8 @@ namespace Ajedrez.Models {
 			try {
 				XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.Load(RutaXMLCuentas);
-				return xmlDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + email + "']")==null;
-                
+				return xmlDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + email + "']") == null;
+
 			} catch (Exception ex) {
 				return false;
 			}
@@ -80,7 +80,7 @@ namespace Ajedrez.Models {
 				return false;
 			} else {
 				this.UltimoAcceso = DateTime.Now;
-                xmlCuenta.SelectSingleNode("./UltimoAcceso").InnerText= this.UltimoAcceso.Ticks.ToString();
+				xmlCuenta.SelectSingleNode("./UltimoAcceso").InnerText = this.UltimoAcceso.Ticks.ToString();
 				xmlDoc.Save(RutaXMLCuentas);
 				return true;
 			}
@@ -118,7 +118,7 @@ namespace Ajedrez.Models {
 
 			xmlDoc.Load(RutaXMLJugadores);
 
-			if (xmlDoc.SelectSingleNode("/Jugadores/Jugador[Id='" + jugador.Id + "' and Email='" + this.Email + "']") != null){
+			if (xmlDoc.SelectSingleNode("/Jugadores/Jugador[Id='" + jugador.Id + "' and Email='" + this.Email + "']") != null) {
 				xmlDoc.Load(RutaXMLCuentas);
 				var cuenta = xmlDoc.SelectSingleNode("//Cuenta[Email='" + this.Email + "']");
 				if (cuenta != null) {
@@ -140,13 +140,13 @@ namespace Ajedrez.Models {
 			if (xmlJugador == null) {
 				var xmldf = xmlDoc.CreateDocumentFragment();
 				xmldf.InnerXml =
-                    @"<Jugador>
-	                    <Email>" + this.Email + @"</Email>
-	                    <Id>" + jugador.Id + @"</Id>
-	                    <Nick>" + jugador.Nick + @"</Nick>
-	                    <Sexo>" + Convert.ToInt32(jugador.Sexo) + @"</Sexo>
-	                    <FechaNacimiento>" + jugador.FechaNacimiento.Ticks + @"</FechaNacimiento>
-                      </Jugador>";
+@"<Jugador>
+	<Email>" + this.Email + @"</Email>
+	<Id>" + jugador.Id + @"</Id>
+	<Nick>" + jugador.Nick + @"</Nick>
+	<Sexo>" + Convert.ToInt32(jugador.Sexo) + @"</Sexo>
+	<FechaNacimiento>" + jugador.FechaNacimiento.Ticks + @"</FechaNacimiento>
+  </Jugador>";
 				xmlDoc.SelectSingleNode("/Jugadores").AppendChild(xmldf);
 
 				xmlDoc.Save(RutaXMLJugadores);

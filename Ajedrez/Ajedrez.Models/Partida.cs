@@ -11,7 +11,7 @@ using System.Xml.Linq;
 namespace Ajedrez.Models {
 	public class Partida {
 
-        private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
+		private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
 
 		private string RutaXMLPartida;
 
@@ -41,9 +41,9 @@ namespace Ajedrez.Models {
 			this.RutaXMLPartida = RutaXML + @"\Partida" + Convert.ToString(this.Id);
 			this.Turno = Color.BLANCO;
 		}
-        public Partida(long id){
-            this.Seleccionar(id);
-        }
+		public Partida(long id) {
+			this.Seleccionar(id);
+		}
 
 		public void Iniciar() {
 			Inicio = new DateTime();
@@ -78,28 +78,26 @@ namespace Ajedrez.Models {
 			if (!(this.ValidarJugada(jugada)))
 				return false;
 			this.Mover(jugada);
-            if (!this.ValidarTablero()){
-                this.Seleccionar(this.Id);
-                return false;
-            }
-            this.GuardarJugada(jugada);
-            this.Jugadas.Add(jugada);
+			if (!this.ValidarTablero()) {
+				this.Seleccionar(this.Id);
+				return false;
+			}
+			this.GuardarJugada(jugada);
+			this.Jugadas.Add(jugada);
 			return true;
 		}
 
-        private void Seleccionar(long id)
-        {
-            ///a partir del xml que representa esta partida se deben extraer todas las propiedades que permitan levantar una partida ya existente
-            throw new NotImplementedException();
-        }
+		private void Seleccionar(long id) {
+			///a partir del xml que representa esta partida se deben extraer todas las propiedades que permitan levantar una partida ya existente
+			throw new NotImplementedException();
+		}
 
-        private void Guardar()
-        {
-            ///Debe guardar en XML todas las propiedades de este objeto con el fin de poder levantarlas mas adelante desde el documento XML que la representa
-            throw new NotImplementedException();
-        }
+		private void Guardar() {
+			///Debe guardar en XML todas las propiedades de este objeto con el fin de poder levantarlas mas adelante desde el documento XML que la representa
+			throw new NotImplementedException();
+		}
 
-        private bool ValidarJugada(Jugada jugada) {
+		private bool ValidarJugada(Jugada jugada) {
 			//valida que el espacio de llegada este disponible o ocupado por una pieza rival
 			if (this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] != null &&
 				this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna].Color == this.Turno)
@@ -164,7 +162,7 @@ namespace Ajedrez.Models {
 				default:
 					return false;
 			}
-            int[] cordInicio = { jugada.Origen.Fila, jugada.Origen.Columna};
+			int[] cordInicio = { jugada.Origen.Fila, jugada.Origen.Columna };
 			cordInicio[0] += dX;
 			cordInicio[1] += dY;
 			//comprueba que el camino este libre
