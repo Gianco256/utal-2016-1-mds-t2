@@ -40,7 +40,7 @@ namespace Ajedrez.Models {
             foreach (XmlNode xPartida in xPartidas)
             {
                 Partida p = new Partida();
-                p.Seleccionar(Int64.Parse(th["Id"].InnerText));
+                //p.Seleccionar(Int64.Parse(th["Id"].InnerText));
                 this.partidas.Add(p);
             }
             return this.partidas;
@@ -87,6 +87,7 @@ namespace Ajedrez.Models {
 	        </Jugador>
             
             */
+            return true;
         }
 
         public bool Eliminar(Partida partida) {
