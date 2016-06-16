@@ -89,6 +89,13 @@ namespace Ajedrez.Models {
 
         private void Seleccionar(long id)
         {
+            ///a partir del xml que representa esta partida se deben extraer todas las propiedades que permitan levantar una partida ya existente
+            throw new NotImplementedException();
+        }
+
+        private void Guardar()
+        {
+            ///Debe guardar en XML todas las propiedades de este objeto con el fin de poder levantarlas mas adelante desde el documento XML que la representa
             throw new NotImplementedException();
         }
 

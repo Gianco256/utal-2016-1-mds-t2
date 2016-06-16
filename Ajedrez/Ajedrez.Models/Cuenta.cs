@@ -24,7 +24,7 @@ namespace Ajedrez.Models {
 			get; set;
 		}
 		public Jugador JugadorActual {
-			get; set;
+			get; private set;
 		}
 
 		public Cuenta() {
@@ -80,7 +80,7 @@ namespace Ajedrez.Models {
 				return false;
 			} else {
 				this.UltimoAcceso = DateTime.Now;
-                xmlCuenta.SelectSingleNode("/UltimoAcceso").InnerText= this.UltimoAcceso.Ticks.ToString();
+                xmlCuenta.SelectSingleNode("./UltimoAcceso").InnerText= this.UltimoAcceso.Ticks.ToString();
 				xmlDoc.Save(RutaXMLCuentas);
 				return true;
 			}
@@ -136,17 +136,17 @@ namespace Ajedrez.Models {
 			} else
 				xmlDoc.Load(RutaXMLJugadores);
 
-			var xmlJugador = xmlDoc.SelectSingleNode("//Jugadores/Jugador[Email='" + this.Email + "']");
+			var xmlJugador = xmlDoc.SelectSingleNode("//Jugadores/Jugador[Id='" + jugador.Id + "']");
 			if (xmlJugador == null) {
 				var xmldf = xmlDoc.CreateDocumentFragment();
 				xmldf.InnerXml =
-@"<Jugador>
-	<Email>" + this.Email + @"</Email>
-	<Id>" + jugador.Id + @"</Id>
-	<Nick>" + jugador.Nick + @"</Nick>
-	<Sexo>" + Convert.ToInt32(jugador.Sexo) + @"</Sexo>
-	<FechaNacimiento>" + jugador.FechaNacimiento.Ticks + @"</FechaNacimiento>
-  </Jugador>";
+                    @"<Jugador>
+	                    <Email>" + this.Email + @"</Email>
+	                    <Id>" + jugador.Id + @"</Id>
+	                    <Nick>" + jugador.Nick + @"</Nick>
+	                    <Sexo>" + Convert.ToInt32(jugador.Sexo) + @"</Sexo>
+	                    <FechaNacimiento>" + jugador.FechaNacimiento.Ticks + @"</FechaNacimiento>
+                      </Jugador>";
 				xmlDoc.SelectSingleNode("/Jugadores").AppendChild(xmldf);
 
 				xmlDoc.Save(RutaXMLJugadores);
