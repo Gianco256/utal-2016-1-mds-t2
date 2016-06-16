@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ using System.Xml.Linq;
 
 namespace Ajedrez.Models {
 	public class Partida {
-		private const string RutaXML = @"C:\Ajedrez";
+
+        private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
+
 		private string RutaXMLPartida;
 
 		private Pieza[,] Tablero;
@@ -38,6 +41,9 @@ namespace Ajedrez.Models {
 			this.RutaXMLPartida = RutaXML + @"\Partida" + Convert.ToString(this.Id);
 			this.Turno = Color.BLANCO;
 		}
+        public Partida(long id){
+            this.Seleccionar(id);
+        }
 
 		public void Iniciar() {
 			Inicio = new DateTime();
@@ -71,34 +77,35 @@ namespace Ajedrez.Models {
 		public bool Jugar(Jugada jugada) {
 			if (!(this.ValidarJugada(jugada)))
 				return false;
-			var xy = jugada.Destino.Traducir();
-			var tmp = this.Tablero[xy[0], xy[1]];
-
 			this.Mover(jugada);
-			this.GuardarJugada(jugada);
-			if (!(this.ValidarTablero())) {
-				this.Tablero[xy[0], xy[1]] = tmp;
-				return false;
-			}
+            if (!this.ValidarTablero()){
+                this.Seleccionar(this.Id);
+                return false;
+            }
+            this.GuardarJugada(jugada);
+            this.Jugadas.Add(jugada);
 			return true;
 		}
 
-		private bool ValidarJugada(Jugada jugada) {
+        private void Seleccionar(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ValidarJugada(Jugada jugada) {
 			//valida que el espacio de llegada este disponible o ocupado por una pieza rival
-			var cordLlegada = jugada.Destino.Traducir();
-			if (this.Tablero[cordLlegada[0], cordLlegada[1]] != null &&
-				this.Tablero[cordLlegada[0], cordLlegada[1]].Color == this.Turno)
+			if (this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] != null &&
+				this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna].Color == this.Turno)
 				return false;
 
 			//valida que la posicion este ocupada por una pieza del turno actual
-			var cordInicio = jugada.Origen.Traducir();
-			var piezaEnMano = this.Tablero[cordInicio[0], cordInicio[1]];
+			var piezaEnMano = this.Tablero[jugada.Origen.Fila, jugada.Origen.Columna];
 			if (piezaEnMano == null || piezaEnMano.Color != this.Turno)
 				return false;
 
 			//Valida que el movimiento pueda ser efectuado por la pieza
-			var dX = cordInicio[0] - cordLlegada[0];
-			var dY = cordInicio[1] - cordLlegada[1];
+			var dX = jugada.Origen.Fila - jugada.Destino.Fila;
+			var dY = jugada.Origen.Columna - jugada.Destino.Columna;
 			switch (piezaEnMano.Tipo) {
 				case Tipo.PEON:
 					//comprueba que el movimiento sea hacia adelante
@@ -113,13 +120,13 @@ namespace Ajedrez.Models {
 
 					if (Math.Abs(dY) == 1) {
 						//posiblemente come
-						if (this.Tablero[cordLlegada[0], cordLlegada[1]] == null)
+						if (this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] == null)
 							return false;
 					} else if (Math.Abs(dY) != 0)
 						return false;
 
 					if (Math.Abs(dX) == 2) {
-						if (cordInicio[0] != 1 || cordInicio[0] != 6)
+						if (jugada.Origen.Fila != 1 || jugada.Origen.Fila != 6)
 							return false;
 					} else if (Math.Abs(dX) != 1)
 						return false;
@@ -150,10 +157,11 @@ namespace Ajedrez.Models {
 				default:
 					return false;
 			}
+            int[] cordInicio = { jugada.Origen.Fila, jugada.Origen.Columna};
 			cordInicio[0] += dX;
 			cordInicio[1] += dY;
 			//comprueba que el camino este libre
-			for (; cordInicio[0] != cordLlegada[0] || cordInicio[0] != cordLlegada[0];
+			for (; cordInicio[0] != jugada.Destino.Fila || cordInicio[0] != jugada.Destino.Columna;
 					cordInicio[0] += dX, cordInicio[1] += dY) {
 				if (this.Tablero[cordInicio[0], cordInicio[1]] != null)
 					return false;
@@ -162,9 +170,9 @@ namespace Ajedrez.Models {
 		}
 
 		private void Mover(Jugada jugada) {
-			Pieza temp = this.Tablero[jugada.Origen.Traducir()[0], jugada.Origen.Traducir()[1]];
-			this.Tablero[jugada.Origen.Traducir()[0], jugada.Origen.Traducir()[1]] = null;
-			this.Tablero[jugada.Destino.Traducir()[0], jugada.Destino.Traducir()[1]] = temp;
+			Pieza temp = this.Tablero[jugada.Origen.Fila, jugada.Origen.Columna];
+			this.Tablero[jugada.Origen.Fila, jugada.Origen.Columna] = null;
+			this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] = temp;
 		}
 
 		private void GuardarJugada(Jugada jugada) {
@@ -179,12 +187,12 @@ namespace Ajedrez.Models {
 			xmldf.InnerXml =
 @"<Jugada>
 	<Origen>
-		<Fila>" + jugada.Origen.Traducir()[0] + @"</Fila>
-		<Columna>" + jugada.Origen.Traducir()[1] + @"</Columna>
+		<Fila>" + jugada.Origen.Fila + @"</Fila>
+		<Columna>" + jugada.Origen.Columna + @"</Columna>
 	</Origen>
 	<Destino>
-		<Fila>" + jugada.Destino.Traducir()[0] + @"</Fila>
-		<Columna>" + jugada.Destino.Traducir()[1] + @"</Columna>
+		<Fila>" + jugada.Destino.Fila + @"</Fila>
+		<Columna>" + jugada.Destino.Columna + @"</Columna>
 	</Destino>
   </Jugada>";
 			xmlDoc.FirstChild.AppendChild(xmldf);

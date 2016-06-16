@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,9 +10,9 @@ using System.Xml.Linq;
 
 namespace Ajedrez.Models {
 	public class Cuenta {
-		private const string RutaXML = @"C:\Ajedrez";
-		private const string RutaXMLCuentas = Cuenta.RutaXML + @"\Cuentas.xml";
-		private const string RutaXMLJugadores = Cuenta.RutaXML + @"\Jugadores.xml";
+        private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
+        private string RutaXMLCuentas = ConfigurationManager.AppSettings["RutaXMLCuentas"];
+		private string RutaXMLJugadores = ConfigurationManager.AppSettings["RutaXMLJugadores"];
 
 		public string Email {
 			get; set;
@@ -44,7 +45,7 @@ namespace Ajedrez.Models {
 			} else {
 				xmlDoc.Load(RutaXMLCuentas);
 			}
-			if (!this.Seleccionar(email)) {
+			if (this.Seleccionar(email)) {
 				var xmldf = xmlDoc.CreateDocumentFragment();
 				xmldf.InnerXml =
 @"<Cuenta>
@@ -64,12 +65,8 @@ namespace Ajedrez.Models {
 			try {
 				XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.Load(RutaXMLCuentas);
-				var xmlCuenta = xmlDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + email + "']");
-				if (xmlCuenta == null) {
-					return false;
-				} else {
-					return true;
-				}
+				return xmlDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + email + "']")==null;
+                
 			} catch (Exception ex) {
 				return false;
 			}
@@ -83,6 +80,7 @@ namespace Ajedrez.Models {
 				return false;
 			} else {
 				this.UltimoAcceso = DateTime.Now;
+                xmlCuenta.SelectSingleNode("/UltimoAcceso").InnerText= this.UltimoAcceso.Ticks.ToString();
 				xmlDoc.Save(RutaXMLCuentas);
 				return true;
 			}
@@ -117,10 +115,10 @@ namespace Ajedrez.Models {
 			XmlDocument xmlDoc = new XmlDocument();
 			if (!System.IO.File.Exists(RutaXMLJugadores))
 				return;
-			else
-				xmlDoc.Load(RutaXMLJugadores);
 
-			if (xmlDoc.SelectSingleNode("/Jugadores/Jugador['Id=" + jugador.Id + " Email=" + this.Email + "]") != null) {
+			xmlDoc.Load(RutaXMLJugadores);
+
+			if (xmlDoc.SelectSingleNode("/Jugadores/Jugador[Id='" + jugador.Id + "' and Email='" + this.Email + "']") != null){
 				xmlDoc.Load(RutaXMLCuentas);
 				var cuenta = xmlDoc.SelectSingleNode("//Cuenta[Email='" + this.Email + "']");
 				if (cuenta != null) {
