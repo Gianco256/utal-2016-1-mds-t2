@@ -17,6 +17,7 @@ namespace Ajedrez.Consola {
 			partida.Pintar();
 			cuenta.JugadorActual.Desafiar(partida);
 			cuenta.JugadorActual.Partidas();
+			PantallaPartida.Detalle(partida);
 			Console.Read();
 		}
 	}

@@ -11,7 +11,7 @@ namespace Ajedrez.Consola {
 		}
 
 		public static void Detalle(Models.Partida p) {
-			throw new NotImplementedException();
+			
 		}
 	}
 }

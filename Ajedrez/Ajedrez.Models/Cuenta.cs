@@ -74,6 +74,7 @@ namespace Ajedrez.Models {
 
 		public bool IniciarSesion() {
 			XmlDocument xmlDoc = new XmlDocument();
+			System.IO.Directory.CreateDirectory(RutaXML);
 			xmlDoc.Load(RutaXMLCuentas);
 			var xmlCuenta = xmlDoc.SelectSingleNode("/Cuentas/Cuenta[Email = '" + this.Email + "' and Password = '" + this.Password + "']");
 			if (xmlCuenta == null) {
