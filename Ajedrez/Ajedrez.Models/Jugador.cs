@@ -46,10 +46,24 @@ namespace Ajedrez.Models {
 		}
 
 		public bool Desafiar(Partida partida) {
-			this.partidas.Add(partida);
+            this.partidas.Add(partida);
+            XmlDocument xmlDoc = new XmlDocument();
+            if (!System.IO.File.Exists(RutaXMLJugadores))
+                return false;
+            else
+                xmlDoc.Load(RutaXMLJugadores);
 
-			////Las partidas deberian guardarse de la siguiente manera en el documento XML que guarda los jugadores.
-			/*
+
+            var xmldf = xmlDoc.CreateDocumentFragment();
+            xmldf.InnerXml =
+            @"<Partida>
+	           <ID>" + partida.Id + @"</ID>
+               <Estado>Pendiente</Estado>
+              </Partida>";
+            xmlDoc.SelectSingleNode("//Jugadores/Jugador[Id='" + this.Id + "']/Partidas").AppendChild(xmldf);
+            xmlDoc.Save(RutaXMLJugadores);
+            ////Las partidas deberian guardarse de la siguiente manera en el documento XML que guarda los jugadores.
+            /*
             
             <Jugador>
 		        <Email>abc</Email>
@@ -86,11 +100,25 @@ namespace Ajedrez.Models {
 	        </Jugador>
             
             */
-			return true;
+            return true;
 		}
 
-		public bool Eliminar(Partida partida) {
-			return this.partidas.Remove(partida);
-		}
-	}
+        public bool Eliminar(Partida partida)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            if (!System.IO.File.Exists(RutaXMLJugadores))
+                return false;
+            else
+                xmlDoc.Load(RutaXMLJugadores);
+
+            var elemPartida = xmlDoc.SelectSingleNode("//Jugadores/Jugador[Id='" + this.Id + "']/Partidas/Partida['ID=" + partida.Id + "']");
+            if (elemPartida != null)
+            {
+                elemPartida.ParentNode.RemoveChild(elemPartida);
+                xmlDoc.Save(RutaXMLJugadores);
+                return true;
+            }
+            return false;
+        }
+    }
 }
