@@ -11,50 +11,89 @@ namespace Ajedrez.Consola {
 		}
 
 		public static void Detalle(Models.Partida p, long jugador) {
+			Interfaz.Title("Información de la Partida", true, false);
 			Console.WriteLine("Id      : " + p.Id);
 			Console.WriteLine("Blancas : " + p.IdBlancas);
 			Console.WriteLine("Negras  : " + p.IdNegras);
 			Console.WriteLine("Turno   : " + p.Turno);
+			Interfaz.Title("Tablero", false, false);
 			if (jugador == p.IdBlancas) {
 				p.Pintar();
-				//ganador?
+				Interfaz.Line(false);
 				if (p.Turno == Models.Color.BLANCO) {
 					PantallaPartida.HacerJugada(p);
 				} else {
-					Console.WriteLine("Aún no es su turno");
+					Console.WriteLine("(!) Aún no es su turno (!)");
 				}
 			} else {
-				p.Pintar(); // Invertir!
+				p.Pintar();
+				Interfaz.Line(false);
 				if (p.Turno == Models.Color.NEGRO) {
 					PantallaPartida.HacerJugada(p);
 				} else {
-					Console.WriteLine("Aún no es su turno");
+					Console.WriteLine("(!) Aún no es su turno (!)");
 				}
 			}
-			p.Pintar();
-			Console.WriteLine(p.Turno);
 		}
 
 		private static void HacerJugada(Models.Partida p) {
-			Console.Write("Origen  : "); var origen = Console.ReadLine();
-			Console.Write("Destino : "); var destino = Console.ReadLine();
-			var origenCoordenada = PantallaPartida.Traducir(origen);
-			var destinoCoordenada = PantallaPartida.Traducir(destino);
-			var jugada = new Models.Jugada(origenCoordenada, destinoCoordenada);
-			if (p.Jugar(jugada)) {
-				Console.WriteLine("Jugada hecha exitosamente");
-			} else {
-				Console.WriteLine("Jugada no válida. Ingrese nuevamente");
-				PantallaPartida.HacerJugada(p);
+			string origen = "-1";
+			while (!PantallaPartida.ValidarCoordenada(origen) && origen != "Salir" && origen != "SALIR" && origen != "salir") {
+				Console.Write("Origen  : ");
+				origen = Console.ReadLine();
+				if (!PantallaPartida.ValidarCoordenada(origen) && origen != "Salir" && origen != "SALIR" && origen != "salir") {
+					Console.WriteLine("(!) Coordenada no válida. Ingrese nuevamente (!)");
+				}
 			}
+			if (origen != "Salir" && origen != "SALIR" && origen != "salir") {
+				string destino = "-1";
+				while (!PantallaPartida.ValidarCoordenada(destino) && destino != "Salir" && destino != "SALIR" && destino != "salir" ) {
+					Console.Write("Destino : ");
+					destino = Console.ReadLine();
+					if (!PantallaPartida.ValidarCoordenada(destino) && destino != "Salir" && destino != "SALIR" && destino != "salir") {
+						Console.WriteLine("(!) Coordenada no válida. Ingrese nuevamente (!)");
+					}
+				}
+				if (destino != "Salir" && destino != "SALIR" && destino != "salir") {
+					var origenCoordenada = PantallaPartida.Traducir(origen);
+					var destinoCoordenada = PantallaPartida.Traducir(destino);
+					var jugada = new Models.Jugada(origenCoordenada, destinoCoordenada);
+					if (p.Jugar(jugada)) {
+						Console.WriteLine("(i) Jugada hecha exitosamente (i)");
+					} else {
+						Console.WriteLine("(!) Jugada no válida. Ingrese nuevamente (!)");
+						PantallaPartida.HacerJugada(p);
+					}
+				} else {
+					Console.WriteLine("(i) Ha salido de la partida con éxito (i)");
+					return;
+				}
+			} else {
+				Console.WriteLine("(i) Ha salido de la partida con éxito (i)");
+				return;
+			}
+
 		}
 
-		// TODO
-		private static bool ValidarMovimiento(string coordenada) {
+		private static bool ValidarCoordenada(string argCoordenada) {
+			if (!(argCoordenada[0] == 'A' || argCoordenada[0] == 'a'
+				|| argCoordenada[0] == 'B' || argCoordenada[0] == 'b'
+				|| argCoordenada[0] == 'C' || argCoordenada[0] == 'c'
+				|| argCoordenada[0] == 'D' || argCoordenada[0] == 'd'
+				|| argCoordenada[0] == 'E' || argCoordenada[0] == 'e'
+				|| argCoordenada[0] == 'F' || argCoordenada[0] == 'f'
+				|| argCoordenada[0] == 'G' || argCoordenada[0] == 'g'
+				|| argCoordenada[0] == 'H' || argCoordenada[0] == 'h'
+				)) {
+				return false;
+			}
+			var fila = (int) Char.GetNumericValue(argCoordenada[1]);
+			if (fila < 1 || fila > 8){
+				return false;
+			}
 			return true;
 		}
 
-		// TODO
 		private static Models.Coordenada Traducir(string argCoordenada) {
 			Models.Coordenada coordenada = new Models.Coordenada();
 			if (argCoordenada[0] == 'A' || argCoordenada[0] == 'a') {
