@@ -11,13 +11,12 @@ namespace Ajedrez.Consola {
 		public static void Main(string[] args) {
 			Cuenta cuenta = new Cuenta() { Email = "abc", Password = "123" };
 			Console.WriteLine(cuenta.IniciarSesion());
-			cuenta.CambiarJugadorActivo(cuenta.Jugadores()[0]);
-			var partida = new Partida() { Blancas = cuenta.Jugadores()[0], Negras = cuenta.Jugadores()[1] };
+			cuenta.CambiarJugadorActivo(new Jugador());
+			var partida = new Partida() { IdBlancas = 0, IdNegras = 1 };
 			partida.Iniciar();
-			partida.Pintar();
-			cuenta.JugadorActual.Desafiar(partida);
-			cuenta.JugadorActual.Partidas();
-			PantallaPartida.Detalle(partida);
+			//cuenta.JugadorActual.Desafiar(partida);
+			//cuenta.JugadorActual.Partidas();
+			//PantallaPartida.Detalle(partida, 0);
 			Console.Read();
 		}
 	}

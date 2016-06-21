@@ -15,5 +15,10 @@ namespace Ajedrez.Models {
 
 		public Jugada() {
 		}
+
+		public Jugada(Coordenada origen, Coordenada destino) {
+			this.Origen = origen;
+			this.Destino = destino;
+		}
 	}
 }

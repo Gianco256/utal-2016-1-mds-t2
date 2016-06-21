@@ -10,7 +10,7 @@ namespace Ajedrez.Consola {
 			Console.WriteLine("---------- Tus partidas ---------------");
 			var partidas = j.Partidas();
 			for (int i = 0; i < partidas.Count; i++) {
-				var linea = string.Format("{0}.- {1} vs {2} [{3}]", i, partidas[i].Blancas.Nick, partidas[i].Negras.Nick, partidas[i].Turno);
+				var linea = string.Format("{0}.- {1} vs {2} [{3}]", i, partidas[i].IdBlancas, partidas[i].IdNegras, partidas[i].Turno);
 				Console.WriteLine(linea);
 			}
 		}

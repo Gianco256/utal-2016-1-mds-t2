@@ -10,9 +10,7 @@ using System.Xml.Linq;
 
 namespace Ajedrez.Models {
 	public class Partida {
-
 		private string RutaXML = ConfigurationManager.AppSettings["RutaXML"];
-
 		private string RutaXMLPartida;
 
 		private Pieza[,] Tablero;
@@ -84,52 +82,53 @@ namespace Ajedrez.Models {
 			}
 			this.GuardarJugada(jugada);
 			this.Jugadas.Add(jugada);
+			this.CambiarTurno();
 			return true;
 		}
 
 		private bool Seleccionar(long id) {
-            ///a partir del xml que representa esta partida se deben extraer todas las propiedades que permitan levantar una partida ya existente
-            this.RutaXMLPartida = RutaXML + @"\Partida" + id.ToString() + ".xml";
-            if (!System.IO.File.Exists(RutaXMLPartida))
-                return false;
-            this.Id = id;
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load(this.RutaXMLPartida);
-            
-            this.Inicio = new DateTime(Convert.ToInt64(xDoc.SelectSingleNode("/Inicio").InnerText));
-            this.UltimaJugada = new DateTime(Convert.ToInt64(xDoc.SelectSingleNode("/UltimaJugada").InnerText));
-            this.Turno = (Color)Convert.ToInt32(xDoc.SelectSingleNode("/Turno").InnerText);
-            this.IdBlancas = Convert.ToInt64(xDoc.SelectSingleNode("/IdBlancas").InnerText);
-            this.IdNegras= Convert.ToInt64(xDoc.SelectSingleNode("/IdNegras").InnerText);
-            //llenado del tablero
-            this.Tablero = new Pieza[8, 8];
-            for (int x= 0; x<8; x++){
-                for(int y= 0; y<8; y++){
-                    var casilla = xDoc.SelectSingleNode("/tablero/casilla[Fila='"+ x.ToString() +"' and Columna='" + y.ToString() + "']");
-                    if (casilla["Tipo"].InnerText == "null")
-                        this.Tablero[x, y] = null;
-                    else
-                        this.Tablero[x, y] = new Pieza((Color)Convert.ToInt32(casilla["Color"].InnerText), (Tipo)Convert.ToInt32(casilla["Tipo"].InnerText));
-                }
-            }
-            XmlNodeList jugs = xDoc.SelectNodes("/Jugadas/jugada");
-            this.Jugadas = new List<Jugada>();
-            foreach(XmlNode jug in jugs){
-                this.Jugadas.Add(new Jugada(){
-                    Origen = new Coordenada(){
-                        Fila =Convert.ToInt32(jug["Origen"]["Fila"].InnerText),
-                        Columna = Convert.ToInt32(jug["Origen"]["Columna"].InnerText),
-                    },
-                    Destino= new Coordenada(){
-                        Fila = Convert.ToInt32(jug["Destino"]["Fila"].InnerText),
-                        Columna = Convert.ToInt32(jug["Destino"]["Columna"].InnerText),
-                    }
-                });
-            }
-            
+			///a partir del xml que representa esta partida se deben extraer todas las propiedades que permitan levantar una partida ya existente
+			this.RutaXMLPartida = RutaXML + @"\Partida" + id.ToString() + ".xml";
+			if (!System.IO.File.Exists(RutaXMLPartida))
+				return false;
+			this.Id = id;
+			XmlDocument xDoc = new XmlDocument();
+			xDoc.Load(this.RutaXMLPartida);
 
-            return true;
-        }
+			this.Inicio = new DateTime(Convert.ToInt64(xDoc.SelectSingleNode("/Inicio").InnerText));
+			this.UltimaJugada = new DateTime(Convert.ToInt64(xDoc.SelectSingleNode("/UltimaJugada").InnerText));
+			this.Turno = (Color) Convert.ToInt32(xDoc.SelectSingleNode("/Turno").InnerText);
+			this.IdBlancas = Convert.ToInt64(xDoc.SelectSingleNode("/IdBlancas").InnerText);
+			this.IdNegras = Convert.ToInt64(xDoc.SelectSingleNode("/IdNegras").InnerText);
+			//llenado del tablero
+			this.Tablero = new Pieza[8, 8];
+			for (int x = 0; x < 8; x++) {
+				for (int y = 0; y < 8; y++) {
+					var casilla = xDoc.SelectSingleNode("/tablero/casilla[Fila='" + x.ToString() + "' and Columna='" + y.ToString() + "']");
+					if (casilla["Tipo"].InnerText == "null")
+						this.Tablero[x, y] = null;
+					else
+						this.Tablero[x, y] = new Pieza((Color) Convert.ToInt32(casilla["Color"].InnerText), (Tipo) Convert.ToInt32(casilla["Tipo"].InnerText));
+				}
+			}
+			XmlNodeList jugs = xDoc.SelectNodes("/Jugadas/jugada");
+			this.Jugadas = new List<Jugada>();
+			foreach (XmlNode jug in jugs) {
+				this.Jugadas.Add(new Jugada() {
+					Origen = new Coordenada() {
+						Fila = Convert.ToInt32(jug["Origen"]["Fila"].InnerText),
+						Columna = Convert.ToInt32(jug["Origen"]["Columna"].InnerText),
+					},
+					Destino = new Coordenada() {
+						Fila = Convert.ToInt32(jug["Destino"]["Fila"].InnerText),
+						Columna = Convert.ToInt32(jug["Destino"]["Columna"].InnerText),
+					}
+				});
+			}
+
+
+			return true;
+		}
 
 		private void Guardar() {
 			///Debe guardar en XML todas las propiedades de este objeto con el fin de poder levantarlas mas adelante desde el documento XML que la representa
