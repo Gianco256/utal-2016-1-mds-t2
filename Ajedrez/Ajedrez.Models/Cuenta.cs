@@ -147,6 +147,7 @@ namespace Ajedrez.Models {
 	<Nick>" + jugador.Nick + @"</Nick>
 	<Sexo>" + Convert.ToInt32(jugador.Sexo) + @"</Sexo>
 	<FechaNacimiento>" + jugador.FechaNacimiento.Ticks + @"</FechaNacimiento>
+    <Partidas></Partidas>
   </Jugador>";
 				xmlDoc.SelectSingleNode("/Jugadores").AppendChild(xmldf);
 
