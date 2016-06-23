@@ -76,13 +76,13 @@ namespace Ajedrez.Models {
 			if (!(this.ValidarJugada(jugada)))
 				return false;
 			this.Mover(jugada);
+			this.CambiarTurno();
 			if (!this.ValidarTablero()) {
 				this.Seleccionar(this.Id);
 				return false;
 			}
 			this.GuardarJugada(jugada);
 			this.Jugadas.Add(jugada);
-			this.CambiarTurno();
 			return true;
 		}
 
@@ -104,7 +104,7 @@ namespace Ajedrez.Models {
 			this.Tablero = new Pieza[8, 8];
 			for (int x = 0; x < 8; x++) {
 				for (int y = 0; y < 8; y++) {
-					var casilla = xDoc.SelectSingleNode("/tablero/casilla[Fila='" + x.ToString() + "' and Columna='" + y.ToString() + "']");
+					var casilla = xDoc.SelectSingleNode("/Tablero/casilla[Fila='" + x.ToString() + "' and Columna='" + y.ToString() + "']");
 					if (casilla["Tipo"].InnerText == "null")
 						this.Tablero[x, y] = null;
 					else
@@ -130,9 +130,64 @@ namespace Ajedrez.Models {
 			return true;
 		}
 
-		private void Guardar() {
+		private bool Guardar() {
 			///Debe guardar en XML todas las propiedades de este objeto con el fin de poder levantarlas mas adelante desde el documento XML que la representa
-			throw new NotImplementedException();
+			XmlDocument xDoc= new XmlDocument();
+			if (System.IO.File.Exists(RutaXMLPartida)){
+				xDoc.Load(this.RutaXMLPartida);
+				if(xDoc.SelectSingleNode("/UltimaJugada").InnerText != this.UltimaJugada.Ticks.ToString()) return false;
+			}
+			
+			String xTableroFrag = "";
+			for (int x = 0; x < 8; x++) {
+				for (int y = 0; y < 8; y++) {
+					xTableroFrag+= 
+					@"<casilla>
+						<Fila>" + x.ToString() + @"</Fila>
+						<Columna>" + y.ToString() + @"</Columna>
+					";
+					if(this.tablero[x, y]==null){
+						xTableroFrag+= 
+							@"<Tipo>null</Tipo>
+							<Color>null</Color>
+						</casilla>
+						";
+					}else{
+						xTableroFrag+=
+							@"<Tipo>" + ((int)this.tablero[x, y].Tipo).ToString() + @"</Tipo>
+							<Color>" + ((int)this.tablero[x, y].Color).ToString() + @"</Color>
+						</casilla>
+						";
+					}
+				}
+			}
+			String xJugadasFrag= "";
+			foreach(var jug in this.Jugadas){
+				xJugadasFrag+= 
+				@"<jugada>
+					<Origen>
+						<Fila>" + jug.Origen.Fila.ToString() + @"</Fila>
+						<Columna>" + jug.Origen.Columna.ToString() + @"</Columna>
+					</Origen>
+					<Destino>
+						<Fila>" + jug.Destino.Fila.ToString() + @"</Fila>
+						<Columna>" + jug.Destino.Columna.ToString() + @"</Columna>
+					</Destino>
+				</jugada>
+				";
+			}
+			xPartida= 
+			@"<Id>" + this.Id.ToString() + @"</Id>
+			<Inicio>" + this.Inicio.Ticks.ToString() + @"</Inicio>
+			<UltimaJugada>" + this.UltimaJugada.Ticks.ToString() + @"</UltimaJugada>
+			<Turno>" + ((int)this.Turno).ToString() + @"</Turno>
+			<IdBlancas>" + this.IdBlancas.ToString() + @"</IdBlancas>
+			<IdNegras>" + this.IdNegras.ToString() + @"</IdNegras>
+			<Jugadas>" + xJugadasFrag + @"</Jugadas>
+			<Tablero>" + xTableroFrag + @"</Tablero>";
+			xDoc.LoadXml(xPartida);
+			xDoc.Save(this.RutaXMLPartida);
+			return true;
 		}
 
 		private bool ValidarJugada(Jugada jugada) {
@@ -154,10 +209,10 @@ namespace Ajedrez.Models {
 					//comprueba que el movimiento sea hacia adelante
 					//TODO: ratificar comprobaciones con el llenado del tablero
 					if (piezaEnMano.Color == Color.BLANCO) {
-						if (dX <= 0)
+						if (dX >= 0)
 							return false;
 					} else {
-						if (dX >= 0)
+						if (dX <= 0)
 							return false;
 					}
 
@@ -169,7 +224,7 @@ namespace Ajedrez.Models {
 						return false;
 
 					if (Math.Abs(dX) == 2) {
-						if (jugada.Origen.Fila != 1 || jugada.Origen.Fila != 6)
+						if ((piezaEnMano.Color == Color.NEGRO && jugada.Origen.Fila != 1) || (piezaEnMano.Color==Color.BLANCO && jugada.Origen.Fila != 6)
 							return false;
 					} else if (Math.Abs(dX) != 1)
 						return false;
@@ -243,277 +298,27 @@ namespace Ajedrez.Models {
 
 		}
 
-		private bool ValidarTablero_Caballo(int posicionCaballoX, int posicionCaballoY, int posicionReyX, int posicionReyY) {
-			if (posicionReyX + 1 == posicionCaballoX && posicionReyY + 2 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX - 1 == posicionCaballoX && posicionReyY + 2 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX + 1 == posicionCaballoX && posicionReyY - 2 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX - 1 == posicionCaballoX && posicionReyY - 2 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX + 2 == posicionCaballoX && posicionReyY + 1 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX - 2 == posicionCaballoX && posicionReyY + 1 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX + 2 == posicionCaballoX && posicionReyY - 1 == posicionCaballoY) {
-				return true;
-			}
-			if (posicionReyX - 2 == posicionCaballoX && posicionReyY - 1 == posicionCaballoY) {
-				return true;
-			}
-			return false;
-		}
-
 		private bool ValidarTablero() {
-			// Turno contrario
-			Color turnoOponente = (this.Turno == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
-			// Buscar la posición del rey
-			int i, j, posicionX = -1, posicionY = -1;
-			// Si es blanco
-			if (this.Turno == Color.BLANCO) {
-				for (i = 0; i < 8; i++) {
-					for (j = 0; j < 8; j++) {
-						Pieza piezaRey = this.Tablero[i, j];
-						if (piezaRey != null && piezaRey.Tipo == Tipo.REY && piezaRey.Color == Color.NEGRO) {
-							posicionX = i;
-							posicionY = j;
-						}
-					}
-				}
-				// Si es negro
-			} else {
-				for (i = 0; i < 8; i++) {
-					for (j = 0; j < 8; j++) {
-						Pieza piezaRey = this.Tablero[i, j];
-						if (piezaRey != null && piezaRey.Tipo == Tipo.REY && piezaRey.Color == Color.BLANCO) {
-							posicionX = i;
-							posicionY = j;
-						}
+			Jugada jug= new Jugada();
+			for(int fila= 0; fila<8; fila++){
+				for(int colum= 0; colum<8; colum++){
+					if(this.tablero[fila, colum]!=null && 
+						this.tablero[fila, colum].Tipo == Tipo.REY &&
+						this.tablero[fila, colum].Color != this.Turno)
+					{
+						jug.Destino.Fila= fila;
+						jug.Destino.Columna= colum;
+						fila= 8;
+						colum= 8;
 					}
 				}
 			}
-			// Mirar horizontalmente (a la izquierda) si el rey está en jaque
-			for (i = posicionX - 1; i >= 0; i--) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[i, posicionY];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es una torre o una reina
-						if (piezaEncontrada.Tipo == Tipo.TORRE || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
+			for(int jug.Origen.Fila= 0; jug.Origen.Fila<8; jug.Origen.Fila++){
+				for(int jug.Origen.Columna= 0; jug.Origen.Columna<8; jug.Origen.Columna++){
+					if(this.ValidarJugada(jug)) return false;
 				}
 			}
-			// Mirar horizontalmente (a la derecha) si el rey está en jaque
-			for (i = posicionX + 1; i < 8; i++) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[i, posicionY];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es una torre o una reina
-						if (piezaEncontrada.Tipo == Tipo.TORRE || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-			}
-			// Mirar verticalmente (arriba) si el rey está en jaque
-			for (j = posicionY - 1; j >= 0; j--) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[posicionX, j];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es una torre o una reina
-						if (piezaEncontrada.Tipo == Tipo.TORRE || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-			}
-			// Mirar verticalmente (abajo) si el rey está en jaque
-			for (j = posicionY + 1; j < 8; j++) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[posicionX, j];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es una torre o una reina
-						if (piezaEncontrada.Tipo == Tipo.TORRE || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-			}
-			// Mirar diagonamlente (Noroeste) si el rey está en jaque
-			i = posicionX - 1;
-			j = posicionY - 1;
-			while (i >= 0 && j >= 0) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[i, j];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es un alfil o una reina
-						if (piezaEncontrada.Tipo == Tipo.ALFIL || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-							// Revisar si es un peón
-						} else if (piezaEncontrada.Tipo == Tipo.PEON && i == posicionX - 1 && piezaEncontrada.Color == Color.NEGRO) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-				i--;
-				j--;
-			}
-			// Mirar diagonamlente (Noreste) si el rey está en jaque
-			i = posicionX + 1;
-			j = posicionY - 1;
-			while (i < 8 && j >= 0) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[i, j];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es un alfil o una reina
-						if (piezaEncontrada.Tipo == Tipo.ALFIL || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-							// Revisar si es un peón
-						} else if (piezaEncontrada.Tipo == Tipo.PEON && i == posicionX + 1 && piezaEncontrada.Color == Color.NEGRO) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-				i++;
-				j--;
-			}
-			// Mirar diagonamlente (Sureste) si el rey está en jaque
-			i = posicionX + 1;
-			j = posicionY + 1;
-			while (i < 8 && j < 8) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[i, j];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es un alfil o una reina
-						if (piezaEncontrada.Tipo == Tipo.ALFIL || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-							// Revisar si es un peón
-						} else if (piezaEncontrada.Tipo == Tipo.PEON && i == posicionX + 1 && piezaEncontrada.Color == Color.BLANCO) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-				i++;
-				j++;
-			}
-			// Mirar diagonamlente (Suroeste) si el rey está en jaque
-			i = posicionX - 1;
-			j = posicionY + 1;
-			while (i >= 0 && j < 8) {
-				// Encontrar la primera pieza
-				Pieza piezaEncontrada = this.Tablero[i, j];
-				if (piezaEncontrada != null) {
-					// Revisar si la pieza corresponde a una del oponente
-					if (piezaEncontrada.Color == turnoOponente) {
-						// Se salvó
-						break;
-					} else {
-						// Revisar si es un alfil o una reina
-						if (piezaEncontrada.Tipo == Tipo.ALFIL || piezaEncontrada.Tipo == Tipo.REINA) {
-							// Jaque
-							return true;
-							// Revisar si es un peón
-						} else if (piezaEncontrada.Tipo == Tipo.PEON && i == posicionX - 1 && piezaEncontrada.Color == Color.BLANCO) {
-							// Jaque
-							return true;
-						} else {
-							// Se salvó
-							break;
-						}
-					}
-				}
-				i--;
-				j++;
-			}
-			// Buscar caballo
-			for (i = 0; i < 8; i++) {
-				for (j = 0; j < 8; j++) {
-					Pieza caballo = this.Tablero[i, j];
-					// Ver si efectivamente es un caballo del que está jugando (el computador no sabe si lo es ¬¬)
-					if (caballo != null && caballo.Tipo == Tipo.CABALLO && caballo.Color == this.Turno) {
-						if (this.ValidarTablero_Caballo(i, j, posicionX, posicionY)) {
-							// Jaque
-							return true;
-						}
-					}
-				}
-			}
-			// Definitivamente se salvó...
-			return false;
+			return true;
 		}
 
 		private void CambiarTurno() {
