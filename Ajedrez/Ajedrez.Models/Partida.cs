@@ -38,6 +38,7 @@ namespace Ajedrez.Models {
 			this.Id = (new Random()).Next();//??
 			this.RutaXMLPartida = RutaXML + @"\Partida" + this.Id.ToString() + ".xml";
 			this.Turno = Color.BLANCO;
+            this.Jugadas = new List<Jugada>();
 		}
 		public Partida(long id) {
 			this.Seleccionar(id);
@@ -146,7 +147,7 @@ namespace Ajedrez.Models {
 						<Fila>" + x.ToString() + @"</Fila>
 						<Columna>" + y.ToString() + @"</Columna>
 					";
-					if(this.tablero[x, y]==null){
+					if(this.Tablero[x, y]==null){
 						xTableroFrag+= 
 							@"<Tipo>null</Tipo>
 							<Color>null</Color>
@@ -154,8 +155,8 @@ namespace Ajedrez.Models {
 						";
 					}else{
 						xTableroFrag+=
-							@"<Tipo>" + ((int)this.tablero[x, y].Tipo).ToString() + @"</Tipo>
-							<Color>" + ((int)this.tablero[x, y].Color).ToString() + @"</Color>
+							@"<Tipo>" + ((int)this.Tablero[x, y].Tipo).ToString() + @"</Tipo>
+							<Color>" + ((int)this.Tablero[x, y].Color).ToString() + @"</Color>
 						</casilla>
 						";
 					}
@@ -176,7 +177,7 @@ namespace Ajedrez.Models {
 				</jugada>
 				";
 			}
-			xPartida= 
+			String xPartida= 
 			@"<Id>" + this.Id.ToString() + @"</Id>
 			<Inicio>" + this.Inicio.Ticks.ToString() + @"</Inicio>
 			<UltimaJugada>" + this.UltimaJugada.Ticks.ToString() + @"</UltimaJugada>
@@ -190,7 +191,7 @@ namespace Ajedrez.Models {
 			return true;
 		}
 
-		private bool ValidarJugada(Jugada jugada) {
+		public bool ValidarJugada(Jugada jugada) {
 			//valida que el espacio de llegada este disponible o ocupado por una pieza rival
 			if (this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] != null &&
 				this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna].Color == this.Turno)
@@ -224,7 +225,7 @@ namespace Ajedrez.Models {
 						return false;
 
 					if (Math.Abs(dX) == 2) {
-						if ((piezaEnMano.Color == Color.NEGRO && jugada.Origen.Fila != 1) || (piezaEnMano.Color==Color.BLANCO && jugada.Origen.Fila != 6)
+                        if ((piezaEnMano.Color == Color.NEGRO && jugada.Origen.Fila != 1) || (piezaEnMano.Color == Color.BLANCO && jugada.Origen.Fila != 6))
 							return false;
 					} else if (Math.Abs(dX) != 1)
 						return false;
@@ -299,12 +300,12 @@ namespace Ajedrez.Models {
 		}
 
 		private bool ValidarTablero() {
-			Jugada jug= new Jugada();
+			Jugada jug= new Jugada() {Origen= new Coordenada(), Destino= new Coordenada()};
 			for(int fila= 0; fila<8; fila++){
 				for(int colum= 0; colum<8; colum++){
-					if(this.tablero[fila, colum]!=null && 
-						this.tablero[fila, colum].Tipo == Tipo.REY &&
-						this.tablero[fila, colum].Color != this.Turno)
+					if(this.Tablero[fila, colum]!=null && 
+						this.Tablero[fila, colum].Tipo == Tipo.REY &&
+						this.Tablero[fila, colum].Color != this.Turno)
 					{
 						jug.Destino.Fila= fila;
 						jug.Destino.Columna= colum;
@@ -313,8 +314,8 @@ namespace Ajedrez.Models {
 					}
 				}
 			}
-			for(int jug.Origen.Fila= 0; jug.Origen.Fila<8; jug.Origen.Fila++){
-				for(int jug.Origen.Columna= 0; jug.Origen.Columna<8; jug.Origen.Columna++){
+			for(jug.Origen.Fila= 0; jug.Origen.Fila<8; jug.Origen.Fila++){
+				for(jug.Origen.Columna= 0; jug.Origen.Columna<8; jug.Origen.Columna++){
 					if(this.ValidarJugada(jug)) return false;
 				}
 			}

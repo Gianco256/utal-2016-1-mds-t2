@@ -71,7 +71,6 @@ namespace Ajedrez.Models {
 				return false;
 			}
 		}
-
 		public bool IniciarSesion() {
 			XmlDocument xmlDoc = new XmlDocument();
 			System.IO.Directory.CreateDirectory(RutaXML);
