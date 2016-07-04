@@ -87,7 +87,7 @@ namespace Ajedrez.Models {
 			return true;
 		}
 
-		private bool Seleccionar(long id) {
+		public bool Seleccionar(long id) {
 			///a partir del xml que representa esta partida se deben extraer todas las propiedades que permitan levantar una partida ya existente
 			this.RutaXMLPartida = RutaXML + @"\Partida" + id.ToString() + ".xml";
 			if (!System.IO.File.Exists(RutaXMLPartida))
@@ -131,35 +131,26 @@ namespace Ajedrez.Models {
 			return true;
 		}
 
-		private bool Guardar() {
+		public bool Guardar() {
 			///Debe guardar en XML todas las propiedades de este objeto con el fin de poder levantarlas mas adelante desde el documento XML que la representa
 			XmlDocument xDoc= new XmlDocument();
 			if (System.IO.File.Exists(RutaXMLPartida)){
 				xDoc.Load(this.RutaXMLPartida);
 				if(xDoc.SelectSingleNode("/UltimaJugada").InnerText != this.UltimaJugada.Ticks.ToString()) return false;
 			}
-			
-			String xTableroFrag = "";
+			String xCasillaFormat= @"
+                    <casilla>
+						<Fila>{0}</Fila>
+						<Columna>{1}</Columna>
+                        <Tipo>{2}</Tipo>
+						<Color>{3}</Color>
+					</casilla>
+";
+            String xTableroFrag = "";
 			for (int x = 0; x < 8; x++) {
 				for (int y = 0; y < 8; y++) {
-					xTableroFrag+= 
-					@"<casilla>
-						<Fila>" + x.ToString() + @"</Fila>
-						<Columna>" + y.ToString() + @"</Columna>
-					";
-					if(this.Tablero[x, y]==null){
-						xTableroFrag+= 
-							@"<Tipo>null</Tipo>
-							<Color>null</Color>
-						</casilla>
-						";
-					}else{
-						xTableroFrag+=
-							@"<Tipo>" + ((int)this.Tablero[x, y].Tipo).ToString() + @"</Tipo>
-							<Color>" + ((int)this.Tablero[x, y].Color).ToString() + @"</Color>
-						</casilla>
-						";
-					}
+                    var tmp = this.Tablero[x, y];
+                    xTableroFrag += String.Format(xCasillaFormat, x, y, (tmp == null ? "null" : ((int)tmp.Tipo).ToString()), (tmp == null ? "null" : ((int)tmp.Color).ToString()));
 				}
 			}
 			String xJugadasFrag= "";
@@ -177,15 +168,32 @@ namespace Ajedrez.Models {
 				</jugada>
 				";
 			}
-			String xPartida= 
-			@"<Id>" + this.Id.ToString() + @"</Id>
-			<Inicio>" + this.Inicio.Ticks.ToString() + @"</Inicio>
-			<UltimaJugada>" + this.UltimaJugada.Ticks.ToString() + @"</UltimaJugada>
-			<Turno>" + ((int)this.Turno).ToString() + @"</Turno>
-			<IdBlancas>" + this.IdBlancas.ToString() + @"</IdBlancas>
-			<IdNegras>" + this.IdNegras.ToString() + @"</IdNegras>
-			<Jugadas>" + xJugadasFrag + @"</Jugadas>
-			<Tablero>" + xTableroFrag + @"</Tablero>";
+			String xPartida= String.Format(@"
+<Id>
+{0}
+</Id>
+<Inicio>
+{1}
+</Inicio>
+<UltimaJugada>
+{2}
+</UltimaJugada>
+<Turno>
+{3}
+</Turno>
+<IdBlancas>
+{4}
+</IdBlancas>
+<IdNegras>
+{5}
+</IdNegras>
+<Jugadas>
+{6}
+</Jugadas>
+<Tablero>
+{7}
+</Tablero>", this.Id, this.Inicio.Ticks, this.UltimaJugada.Ticks, ((int)this.Turno), this.IdBlancas, this.IdNegras, xJugadasFrag, xTableroFrag);
+            Console.Write(xPartida);
 			xDoc.LoadXml(xPartida);
 			xDoc.Save(this.RutaXMLPartida);
 			return true;
@@ -203,35 +211,35 @@ namespace Ajedrez.Models {
 				return false;
 
 			//Valida que el movimiento pueda ser efectuado por la pieza
-			var dX = jugada.Origen.Fila - jugada.Destino.Fila;
-			var dY = jugada.Origen.Columna - jugada.Destino.Columna;
-			switch (piezaEnMano.Tipo) {
-				case Tipo.PEON:
-					//comprueba que el movimiento sea hacia adelante
-					//TODO: ratificar comprobaciones con el llenado del tablero
-					if (piezaEnMano.Color == Color.BLANCO) {
-						if (dX >= 0)
-							return false;
-					} else {
-						if (dX <= 0)
-							return false;
-					}
+			var dX = jugada.Destino.Fila - jugada.Origen.Fila;
+			var dY = jugada.Destino.Columna - jugada.Origen.Columna;
+            switch (piezaEnMano.Tipo) {
+                case Tipo.PEON:
+                    //comprueba que el movimiento sea hacia adelante
+                    //TODO: ratificar comprobaciones con el llenado del tablero
+                    if (piezaEnMano.Color == Color.BLANCO) {
+                        if (dX >= 0)
+                            return false;
+                    } else {
+                        if (dX <= 0)
+                            return false;
+                    }
 
-					if (Math.Abs(dY) == 1) {
-						//posiblemente come
-						if (this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] == null)
-							return false;
-					} else if (Math.Abs(dY) != 0)
-						return false;
+                    if (Math.Abs(dY) == 1) {
+                        //posiblemente come
+                        if (this.Tablero[jugada.Destino.Fila, jugada.Destino.Columna] == null)
+                            return false;
+                    } else if (Math.Abs(dY) != 0)
+                        return false;
 
-					if (Math.Abs(dX) == 2) {
+                    if (Math.Abs(dX) == 2) {
                         if ((piezaEnMano.Color == Color.NEGRO && jugada.Origen.Fila != 1) || (piezaEnMano.Color == Color.BLANCO && jugada.Origen.Fila != 6))
-							return false;
-					} else if (Math.Abs(dX) != 1)
-						return false;
-					break;
-				case Tipo.TORRE:
-					if (dX != 0 && dY != 0)
+                            return false;
+                    } else if (Math.Abs(dX) != 1)
+                        return false;
+                    break;
+                case Tipo.TORRE:
+                    if ((dX != 0 && dY != 0))
 						return false;
 					break;
 				case Tipo.CABALLO:
@@ -250,8 +258,10 @@ namespace Ajedrez.Models {
 						return false;
 					break;
 				case Tipo.REINA:
-					if ((dX != 0 && dY != 0) || Math.Abs(dX) != Math.Abs(dY))
-						return false;
+                    if (Math.Abs(dX) != Math.Abs(dY)){
+                        if (dX != 0 && dY != 0)
+                            return false;
+                    }
 					break;
 				default:
 					return false;
@@ -260,7 +270,7 @@ namespace Ajedrez.Models {
 			cordInicio[0] += dX;
 			cordInicio[1] += dY;
 			//comprueba que el camino este libre
-			for (; cordInicio[0] != jugada.Destino.Fila || cordInicio[0] != jugada.Destino.Columna;
+			for (; cordInicio[0] != jugada.Destino.Fila || cordInicio[1] != jugada.Destino.Columna;
 					cordInicio[0] += dX, cordInicio[1] += dY) {
 				if (this.Tablero[cordInicio[0], cordInicio[1]] != null)
 					return false;
