@@ -32,16 +32,17 @@ namespace Ajedrez.Consola {
 				}
 			}
 			jugador.Sexo = (Models.Sexo) Enum.Parse(typeof(Models.Sexo), sexoStr);
-			while (true) {
-				try {
+			while (true){
+				try{
 					Console.Write("Fecha de Nacimiento : ");
 					string fechaNacimiento = Console.ReadLine();
 					jugador.FechaNacimiento = DateTime.ParseExact(fechaNacimiento, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 					break;
-				} catch (Exception ex) {
+				}catch (Exception ex) {
 					Console.WriteLine("(!) Fecha no válida. Intente nuevamente (!)");
 				}
 			}
+            jugador.Id = Models.Jugador.CantidadJugadores();
 			c.CrearJugador(jugador);
 			Interfaz.Title("(i) Jugador " + nick + " creado con éxito (i)", true, true);
 		}

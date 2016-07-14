@@ -136,7 +136,7 @@ namespace Ajedrez.Models {
 			} else
 				xmlDoc.Load(RutaXMLJugadores);
 
-			var xmlJugador = xmlDoc.SelectSingleNode("//Jugadores/Jugador[Id='" + jugador.Id + "']");
+			var xmlJugador = xmlDoc.SelectSingleNode("/Jugadores/Jugador[Id='" + jugador.Id + "']");
 			if (xmlJugador == null) {
 				var xmldf = xmlDoc.CreateDocumentFragment();
 				xmldf.InnerXml =

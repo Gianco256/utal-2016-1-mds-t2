@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Ajedrez.Models {
 	public class Jugador {
-		private string RutaXMLJugadores = ConfigurationManager.AppSettings["RutaXMLJugadores"];
+		private static string RutaXMLJugadores = ConfigurationManager.AppSettings["RutaXMLJugadores"];
 
 		public long Id {
 			get; set;
@@ -27,6 +27,13 @@ namespace Ajedrez.Models {
 		public Jugador() {
 			this.partidas = new List<Partida>();
 		}
+
+        public static long CantidadJugadores() {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(RutaXMLJugadores);
+            long tmp= xDoc.SelectNodes("//jugador").Count;
+            return tmp;
+        }
 
 		public List<Partida> Partidas() {
 			XmlDocument xmlDoc = new XmlDocument();

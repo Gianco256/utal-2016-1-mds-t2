@@ -8,17 +8,24 @@ using Ajedrez.Models;
 
 namespace Ajedrez.Consola {
 	public class Program {
-		public static void Main(string[] args) {
-			Cuenta cuenta = new Cuenta() { Email = "abc", Password = "123" };
+        public static void Main(string[] args) {
+            Cuenta cuenta = new Cuenta() { Email = "Gianco256@gmail.com", Password = "123", UltimoAcceso = DateTime.Now };
             cuenta.Registrar(cuenta.Email, cuenta.Password);
-			Console.WriteLine(cuenta.IniciarSesion());
-			cuenta.CambiarJugadorActivo(new Jugador());
-			var partida = new Partida() { IdBlancas = 0, IdNegras = 1 };
-			partida.Iniciar();
-            PantallaPartida.Detalle(partida, 0);
-			//cuenta.JugadorActual.Desafiar(partida);
-			//cuenta.JugadorActual.Partidas();
-			PantallaJugador.Crear(cuenta);
+            Console.WriteLine(cuenta.IniciarSesion());
+            var partida = new Partida() { IdBlancas = 0};
+            cuenta.CambiarJugadorActivo(cuenta.Jugadores().FindLast(m=> m.Id==1));
+            partida.IdNegras = cuenta.JugadorActual.Id;
+
+            partida.Iniciar();
+            long[] ids = { partida.IdBlancas, cuenta.JugadorActual.Id };
+            for(int g= 0; g<6; g++)
+            {
+                PantallaPartida.Detalle(partida, ids[g%2]);
+            }
+            
+            //cuenta.JugadorActual.Desafiar(partida);
+            //cuenta.JugadorActual.Partidas();
+            
 			Console.Read();
 		}
 	}
